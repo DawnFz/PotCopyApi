@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawnfz.potcopyapi.mapper.TagMapper">
+
+    <!-- 添加一条标签关联摹本记录 -->
+    <insert id="addTagForCopyInfo">
+        insert into t_tag_info(tagId, copyId)
+        values (#{tagId}, #{copyId})
+    </insert>
+
+    <!-- 添加一个标签 -->
+    <insert id="addTag">
+        insert into t_tag(id, tagName)
+        values (null, #{tagName})
+    </insert>
+
+    <!-- 根据 TagId 查询 Tag -->
+    <select id="getTagByName" resultType="integer">
+        select id
+        from t_tag
+        where tagName = #{tagName}
+    </select>
+
+    <!-- 查询所有的 Tag -->
+    <select id="getTags" resultType="com.dawnfz.potcopyapi.domain.Tag">
+        select *
+        from t_tag
+        order by id
+    </select>
+
+    <!-- 查询包含该 TagId 的 copyId -->
+    <select id="getCopyIds" resultType="string">
+        select ti.copyId
+        from t_tag_info ti
+                 left join t_tag tt on tt.id = ti.tagId
+        where tt.tagName in (${tagNames})
+    </select>
+
+</mapper>

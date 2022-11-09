@@ -1,0 +1,47 @@
+# server port
+server:
+  port: 8080
+  error:
+    include-message: always
+# spring config
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/pot_copy?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root
+    druid:
+      max-active: 20
+      initial-size: 5
+      min-idle: 5
+      min-evictable-idle-time-millis: 300000
+      max-wait: 60000
+      validation-query: select 1
+      test-on-borrow: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+# mybatis config
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+# log[全局异常处理器]
+exception:
+  log: # log 存放位置
+    exLogPath: G:/springboot_log
+# pagehelper config
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+# swagger-ui config
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha # 排序方式[按字母]
+    enabled: true #生产环境请关闭
+  api-docs:
+    enabled: true #生产环境请关闭
+

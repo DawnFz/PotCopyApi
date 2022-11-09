@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawnfz.potcopyapi.mapper.CopyInfoMapper">
+    <!-- CopyInfo 映射结果集 -->
+    <resultMap id="copyInfo" type="com.dawnfz.potcopyapi.domain.CopyInfo">
+        <id column="id" property="id"/>
+        <result column="copyId" property="copyId"/>
+        <result column="copyName" property="copyName"/>
+        <result column="potType" property="potType"/>
+        <result column="uploadUid" property="uploadUid"/>
+        <result column="hits" property="hits"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <!-- 类型字段子查询 -->
+        <collection property="potType" column="{typeId=typeId}"
+                    select="getTypeForCopyInfo"
+                    ofType="string" javaType="string"/>
+        <!-- 区域字段子查询 -->
+        <collection property="blockName" column="{blockId=blockId}"
+                    select="getBlockForCopyInfo"
+                    ofType="string" javaType="string"/>
+        <!-- 集合字段子查询[标签] -->
+        <collection property="tags" column="{copyId=copyId}"
+                    select="getTagsForCopyInfo"
+                    ofType="string" javaType="List"/>
+        <!-- 集合字段子查询[图片] -->
+        <collection property="images" column="{copyId=copyId}"
+                    select="getImagesForCopyInfo"
+                    ofType="string" javaType="List"/>
+
+    </resultMap>
+
+    <!-- 查询数据库中所有的 摹本 记录[主查询] -->
+    <select id="getCopyInfos" resultMap="copyInfo">
+        select *
+        from t_info
+        where true
+        <if test="copyName!=null">
+            and copyName like CONCAT('%', #{copyName},'%')
+        </if>
+        <if test="typeId!=null">
+            and typeId = #{typeId}
+        </if>
+        <if test="blockId!=null">
+            and blockId = #{blockId}
+        </if>
+        <if test="copyIds!=null">
+            and copyId in (${copyIds})
+        </if>
+    </select>
+
+    <!-- 根据 摹本Id 查询 摹本 记录[主查询] -->
+    <select id="getCopyInfoById" resultMap="copyInfo">
+        select *
+        from t_info
+        where copyId = #{copyId}
+    </select>
+
+    <!-- 标签子查询 -->
+    <select id="getTagsForCopyInfo" resultType="string">
+        select tt.tagName
+        from t_tag tt
+                 left join t_tag_info ti on tt.id = ti.tagId
+        where ti.copyId = #{copyId}
+    </select>
+
+    <!-- 图片子查询 -->
+    <select id="getImagesForCopyInfo" resultType="string">
+        select imageUrl
+        from t_img
+        where copyId = #{copyId}
+    </select>
+
+    <!-- 类型子查询 -->
+    <select id="getTypeForCopyInfo" resultType="string">
+        select typeName
+        from t_type
+        where id = #{typeId}
+    </select>
+
+    <!-- 区域子查询 -->
+    <select id="getBlockForCopyInfo" resultType="string">
+        select blockName
+        from t_block
+        where id = #{blockId}
+    </select>
+
+    <!-- 添加一条摹本数据 -->
+    <insert id="addCopyInfo">
+        insert into t_info(id, copyId, copyName, typeId, blockId, uploadTime, uploadUid, hits, description, status)
+        values (null, #{copyId}, #{copyName}, #{typeId}, #{typeId}, now(), #{uploadUid}, 0, #{description}, 0)
+    </insert>
+
+    <!-- 添加一条图片关联摹本记录 -->
+    <insert id="addImageForCopyInfo">
+        insert into t_img(copyId, imageUrl)
+        values (#{copyId}, #{imageUrl})
+    </insert>
+</mapper>
