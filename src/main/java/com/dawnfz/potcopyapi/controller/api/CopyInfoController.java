@@ -36,7 +36,7 @@ public class CopyInfoController
     }
 
     @ResponseBody
-    @RequestLimit
+    @RequestLimit(count = 20)
     @Operation(summary = "分页查询摹本信息[支持 名称/标签 模糊查询]")
     @GetMapping("/copyInfos")
     public JsonResult getCopyInfos(@RequestParam("pageNum")
@@ -60,7 +60,7 @@ public class CopyInfoController
 
 
     @ResponseBody
-    @RequestLimit
+    @RequestLimit(count = 20)
     @Operation(summary = "根据 摹本编号 查询摹本信息")
     @GetMapping("/copyInfo")
     public JsonResult getCopyInfo(@RequestParam("copyId")

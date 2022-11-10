@@ -33,8 +33,32 @@
 
     </resultMap>
 
+    <!-- CopyInfoDto 映射结果集 -->
+    <resultMap id="copyInfos" type="com.dawnfz.potcopyapi.domain.dto.CopyInfoDto">
+        <result column="copyId" property="copyId"/>
+        <result column="copyName" property="copyName"/>
+        <result column="potType" property="potType"/>
+        <!-- 类型字段子查询 -->
+        <collection property="potType" column="{typeId=typeId}"
+                    select="getTypeForCopyInfo"
+                    ofType="string" javaType="string"/>
+        <!-- 区域字段子查询 -->
+        <collection property="blockName" column="{blockId=blockId}"
+                    select="getBlockForCopyInfo"
+                    ofType="string" javaType="string"/>
+        <!-- 集合字段子查询[标签] -->
+        <collection property="tags" column="{copyId=copyId}"
+                    select="getTagsForCopyInfo"
+                    ofType="string" javaType="List"/>
+        <!-- 集合字段子查询[图片] -->
+        <collection property="images" column="{copyId=copyId}"
+                    select="getImagesForCopyInfo"
+                    ofType="string" javaType="List"/>
+
+    </resultMap>
+
     <!-- 查询数据库中所有的 摹本 记录[主查询] -->
-    <select id="getCopyInfos" resultMap="copyInfo">
+    <select id="getCopyInfos" resultMap="copyInfos">
         select *
         from t_info
         where true

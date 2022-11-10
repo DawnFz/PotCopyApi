@@ -1,6 +1,7 @@
 package com.dawnfz.potcopyapi.mapper;
 
 import com.dawnfz.potcopyapi.domain.CopyInfo;
+import com.dawnfz.potcopyapi.domain.dto.CopyInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,10 +29,10 @@ public interface CopyInfoMapper
     CopyInfo getCopyInfoById(@Param("copyId") String copyId) throws SQLException;
 
     // 查询所有的摹本[根据名称模糊]
-    List<CopyInfo> getCopyInfos(@Param("copyName") String copyName,
-                                @Param("typeId") Integer typeId,
-                                @Param("blockId") Integer blockId,
-                                @Param("copyIds") String copyIds) throws SQLException;
+    List<CopyInfoDto> getCopyInfos(@Param("copyName") String copyName,
+                                   @Param("typeId") Integer typeId,
+                                   @Param("blockId") Integer blockId,
+                                   @Param("copyIds") String copyIds) throws SQLException;
 
     // 查询所有的摹本[根据标签]
     List<CopyInfo> getCopyInfosByTags(@Param("tags") String[] tags) throws SQLException;

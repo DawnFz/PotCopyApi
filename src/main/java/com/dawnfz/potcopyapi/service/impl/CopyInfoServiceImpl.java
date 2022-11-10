@@ -1,6 +1,7 @@
 package com.dawnfz.potcopyapi.service.impl;
 
 import com.dawnfz.potcopyapi.domain.CopyInfo;
+import com.dawnfz.potcopyapi.domain.dto.CopyInfoDto;
 import com.dawnfz.potcopyapi.mapper.CopyInfoMapper;
 import com.dawnfz.potcopyapi.mapper.TagMapper;
 import com.dawnfz.potcopyapi.service.abst.CopyInfoService;
@@ -84,7 +85,7 @@ public class CopyInfoServiceImpl implements CopyInfoService
             copyIdsStr = generateSql(copyIds);
         }
         Page<Object> page = PageHelper.startPage(pageNum, pageSize);
-        List<CopyInfo> copyInfos = copyInfoMapper.getCopyInfos(copyName,typeId,blockId, copyIdsStr);
+        List<CopyInfoDto> copyInfos = copyInfoMapper.getCopyInfos(copyName,typeId,blockId, copyIdsStr);
         long total = page.getTotal();
         int totalPages = page.getPages();
         if (copyInfos.size() == 0) copyInfos = new ArrayList<>();
