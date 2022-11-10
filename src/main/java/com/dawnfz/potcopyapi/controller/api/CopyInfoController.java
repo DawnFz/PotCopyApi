@@ -73,7 +73,7 @@ public class CopyInfoController
     }
 
     @ResponseBody
-    @RequestLimit
+    @RequestLimit(count = 1) // 限制每分钟只能请求一次
     @Operation(summary = "由玩家上传(分享)一个洞天摹本")
     @PostMapping("/shareCopyInfo")
     public JsonResult addCopyInfo(@RequestParam("copyId")
@@ -104,6 +104,4 @@ public class CopyInfoController
         if (!b) return ResultUtil.error("摹本发布失败");
         return ResultUtil.success("摹本发布成功");
     }
-
-
 }

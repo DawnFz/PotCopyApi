@@ -51,7 +51,7 @@ public class GlobalExceptionHandler
             }
             outputStream.flush();
         }
-        String template = "URL:" + url + " 中发生错误，日志已保存至 " + fileName + " 文件中，请联系管理员处理";
+        String template = "URL:" + url + " 中发生错误，日志已保存为 " + fileName + " 文件，请联系管理员处理";
         return ResultUtil.error(500, template, "服务器内部发生错误", Status.exception);
     }
 

@@ -38,7 +38,6 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
-
 # swagger-ui config
 springdoc:
   swagger-ui:
@@ -46,4 +45,19 @@ springdoc:
     enabled: true #生产环境请关闭
   api-docs:
     enabled: true #生产环境请关闭
+# 自定义鉴权授权配置
+config:
+  jwt:
+    header: Authorization
+    scheme: Bearer
+    secret: Private Key
+    expire: 43200
+  auth:
+    sourceKey: Test Key
+  url:
+    excludePaths:
+      - /api/Info/copyInfo
+      - /api/Info/copyInfos
+      - /api/Tag/tags
+
 

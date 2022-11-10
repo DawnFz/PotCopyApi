@@ -50,7 +50,7 @@ public class TagController
     }
 
     @ResponseBody
-    @RequestLimit
+    @RequestLimit(count = 2) //限制每分钟只能请求2次
     @Operation(summary = "[测试]用于增加新的标签(多)")
     @PostMapping("/addTags")
     public JsonResult addTags(@RequestParam("tagName") String[] tagNames) throws SQLException

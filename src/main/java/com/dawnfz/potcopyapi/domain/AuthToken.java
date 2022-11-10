@@ -16,4 +16,6 @@ public class AuthToken
 {
     private String grantee;
 
+    private String key;
+
 }
