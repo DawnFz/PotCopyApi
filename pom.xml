@@ -10,9 +10,13 @@
     </parent>
     <groupId>com.dawnfz</groupId>
     <artifactId>PotCopyApi</artifactId>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
     <name>PotCopyApi</name>
     <description>PotCopyApi</description>
+    <!-- 使用外置 Tomcat 容器[war] -->
+    <packaging>war</packaging>
+    <!-- 使用自带 Tomcat 容器[jar] -->
+    <!--<packaging>jar</packaging>-->
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -27,6 +31,22 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- 外置 Tomcat 依赖调节[start]-->
+        <!-- [1] 依赖排除 取消自带的 Tomcat 容器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- [2] 加载 servlet 依赖 [排除打包]-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 外置 Tomcat 依赖调节[end]-->
 
         <!-- aop -->
         <dependency>
