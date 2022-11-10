@@ -3,6 +3,8 @@ server:
   port: 8080
   error:
     include-message: always
+  servlet:
+    context-path: /PotCopy
 # spring config
 spring:
   datasource:
@@ -29,7 +31,7 @@ mybatis:
 # log[全局异常处理器]
 exception:
   log: # log 存放位置
-    exLogPath: G:/springboot_log
+    exLogPath: ./log
 # pagehelper config
 pagehelper:
   helperDialect: mysql

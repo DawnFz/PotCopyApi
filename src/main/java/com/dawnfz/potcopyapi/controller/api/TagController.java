@@ -1,4 +1,4 @@
-package com.dawnfz.potcopyapi.controller;
+package com.dawnfz.potcopyapi.controller.api;
 
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
 import com.dawnfz.potcopyapi.service.abst.TagService;
@@ -24,7 +24,7 @@ import java.util.Arrays;
  *  Describe: [TagController类]
  */
 @Controller
-@RequestMapping("/Tag")
+@RequestMapping("/api/Tag")
 @Tag(name = "Tag", description = "标签接口")
 public class TagController
 {
@@ -38,7 +38,7 @@ public class TagController
     @ResponseBody
     @RequestLimit
     @Operation(summary = "[锁定页大小10]分页查询标签")
-    @GetMapping("/getTags")
+    @GetMapping("/tags")
     public JsonResult getTags(@RequestParam("pageNum")
                               @Parameter(description = "当前页数")
                               Integer pageNum) throws SQLException

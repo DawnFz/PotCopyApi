@@ -1,4 +1,4 @@
-package com.dawnfz.potcopyapi.controller;
+package com.dawnfz.potcopyapi.controller.api;
 
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
 import com.dawnfz.potcopyapi.domain.CopyInfo;
@@ -24,7 +24,7 @@ import java.sql.SQLException;
  *  Describe: [CopyInfoController类]
  */
 @Controller
-@RequestMapping("/CopyInfo")
+@RequestMapping("/api/Info")
 @Tag(name = "CopyInfo", description = "摹本接口")
 public class CopyInfoController
 {
@@ -38,7 +38,7 @@ public class CopyInfoController
     @ResponseBody
     @RequestLimit
     @Operation(summary = "分页查询摹本信息[支持 名称/标签 模糊查询]")
-    @GetMapping("/getCopyInfos")
+    @GetMapping("/copyInfos")
     public JsonResult getCopyInfos(@RequestParam("pageNum")
                                    @Parameter(description = "当前页数") Integer pageNum,
                                    @RequestParam("pageSize")
@@ -62,7 +62,7 @@ public class CopyInfoController
     @ResponseBody
     @RequestLimit
     @Operation(summary = "根据 摹本编号 查询摹本信息")
-    @GetMapping("/getCopyInfo")
+    @GetMapping("/copyInfo")
     public JsonResult getCopyInfo(@RequestParam("copyId")
                                   @Parameter(description = "摹本编号")
                                   Long copyId) throws SQLException
@@ -75,7 +75,7 @@ public class CopyInfoController
     @ResponseBody
     @RequestLimit
     @Operation(summary = "由玩家上传(分享)一个洞天摹本")
-    @PostMapping("/addCopyInfo")
+    @PostMapping("/shareCopyInfo")
     public JsonResult addCopyInfo(@RequestParam("copyId")
                                   @Parameter(description = "摹本编号") Long copyId,
                                   @RequestParam("copyName")
