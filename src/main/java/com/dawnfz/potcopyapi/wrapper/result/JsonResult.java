@@ -6,7 +6,7 @@ import com.alibaba.fastjson2.JSONObject;
  *  Type: Class
  *  Author: DawnFz.com
  *  Date: 2022/10/21 14:40
- *  Project: MiaoBlog
+ *  Project: PotCopyApi
  *  Version: 1.0
  *  Describe: [JsonResult类]
  */

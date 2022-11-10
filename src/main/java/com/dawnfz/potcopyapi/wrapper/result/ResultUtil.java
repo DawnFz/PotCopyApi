@@ -5,7 +5,7 @@ package com.dawnfz.potcopyapi.wrapper.result;
  *  Type: Class
  *  Author: DawnFz.com
  *  Date: 2022/10/21 14:13
- *  Project: MiaoBlog
+ *  Project: PotCopyApi
  *  Version: 1.0
  *  Describe: [JsonResult类]
  */

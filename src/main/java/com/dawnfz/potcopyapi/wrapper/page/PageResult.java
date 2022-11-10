@@ -6,7 +6,7 @@ import java.util.List;
  *  Type: Class
  *  Author: DawnFz.com
  *  Date: 2022/10/23 23:46
- *  Project: MiaoBlog
+ *  Project: PotCopyApi
  *  Version: 1.0
  *  Describe: [PageResult类]
  *  分页查询结果包装

@@ -17,7 +17,7 @@ import java.io.IOException;
  *  Type: Class
  *  Author: DawnFz.com
  *  Date: 2022/10/21 14:48
- *  Project: MiaoBlog
+ *  Project: PotCopyApi
  *  Version: 1.0
  *  Describe: [TokenHandler类]
  */
@@ -45,7 +45,8 @@ public class TokenInterceptor implements HandlerInterceptor
         String token = sourceAuth != null ? sourceAuth.replaceAll(scheme, "") : null;
         if (token == null)
         {
-            response.sendError(401, "Unauthorized");
+            response.setStatus(401);
+            response.getWriter().write("");
             return false;
         }
 
@@ -55,12 +56,14 @@ public class TokenInterceptor implements HandlerInterceptor
             claims = tokenProperties.getTokenClaim(token);
             if (claims == null)
             {
-                response.sendError(401, "Unauthorized");
+                response.setStatus(401);
+                response.getWriter().write("");
                 return false;
             }
             if (tokenProperties.isTokenExpired(claims.getExpiration()))
             {
-                response.sendError(401, "Token is Expired");
+                response.setStatus(401);
+                response.getWriter().write("");
                 return false;
             }
         }

@@ -15,7 +15,7 @@ import java.util.Map;
  *  Type: Class
  *  Author: DawnFz.com
  *  Date: 2022/11/10 12:26
- *  Project: MiaoBlog
+ *  Project: PotCopyApi
  *  Version: 1.0
  *  Describe: [TokenProperties类]
  * JWT的token，区分大小写

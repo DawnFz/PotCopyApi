@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
  *  Type: Class
  *  Author: DawnFz.com
  *  Date: 2022/10/22 18:43
- *  Project: MiaoBlog
+ *  Project: PotCopyApi
  *  Version: 1.0
  *  Describe: [GlobalExceptionHandler类]
  *  Controller层 全局异常处理

@@ -9,7 +9,7 @@ import java.io.StringWriter;
  *  Type: Class
  *  Author: DawnFz.com
  *  Date: 2022/10/22 18:56
- *  Project: MiaoBlog
+ *  Project: PotCopyApi
  *  Version: 1.0
  *  Describe: [ExceptionDetailUtil类]
  *  异常工具类
