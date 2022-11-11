@@ -3,7 +3,7 @@ package com.dawnfz.potcopyapi.service.impl;
 import com.dawnfz.potcopyapi.domain.CopyInfo;
 import com.dawnfz.potcopyapi.domain.dto.CopyInfoDto;
 import com.dawnfz.potcopyapi.mapper.CopyInfoMapper;
-import com.dawnfz.potcopyapi.mapper.TagMapper;
+import com.dawnfz.potcopyapi.mapper.ParamsMapper;
 import com.dawnfz.potcopyapi.service.abst.CopyInfoService;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
@@ -29,12 +29,12 @@ import java.util.List;
 public class CopyInfoServiceImpl implements CopyInfoService
 {
     private final CopyInfoMapper copyInfoMapper;
-    private final TagMapper tagMapper;
+    private final ParamsMapper paramsMapper;
 
-    public CopyInfoServiceImpl(CopyInfoMapper copyInfoMapper, TagMapper tagMapper)
+    public CopyInfoServiceImpl(CopyInfoMapper copyInfoMapper, ParamsMapper paramsMapper)
     {
         this.copyInfoMapper = copyInfoMapper;
-        this.tagMapper = tagMapper;
+        this.paramsMapper = paramsMapper;
     }
 
     // 添加(分享)一个摹本
@@ -52,7 +52,7 @@ public class CopyInfoServiceImpl implements CopyInfoService
         // 待优化
         for (Integer tagId : tagIds)
         {
-            int tagCnt = tagMapper.addTagForCopyInfo(tagId, copyId);
+            int tagCnt = paramsMapper.addTagForCopyInfo(tagId, copyId);
             if (tagCnt == 0) tagsInsert = false;
         }
         for (String imageUrl : imageUrls)
@@ -81,7 +81,7 @@ public class CopyInfoServiceImpl implements CopyInfoService
         if (tagNames != null)
         {
             String tagNamesStr = generateSql(List.of(tagNames));
-            List<String> copyIds = tagMapper.getCopyIds(tagNamesStr);
+            List<String> copyIds = paramsMapper.getCopyIds(tagNamesStr);
             copyIdsStr = generateSql(copyIds);
         }
         Page<Object> page = PageHelper.startPage(pageNum, pageSize);

@@ -1,6 +1,6 @@
 package com.dawnfz.potcopyapi.service.abst;
 
-import com.dawnfz.potcopyapi.domain.Tag;
+import com.dawnfz.potcopyapi.domain.PotType;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 
@@ -15,11 +15,13 @@ import java.util.List;
  *  Version: 1.0
  *  Describe: [TagService接口]
  */
-public interface TagService
+public interface ParamsService
 {
     boolean addTag(String tagName) throws SQLException;
 
     boolean addTags(String[] tagNames) throws SQLException;
 
     PageResult getTags(PageRequest pageRequest) throws SQLException;
+
+    List<PotType> getPotTypes() throws SQLException;
 }

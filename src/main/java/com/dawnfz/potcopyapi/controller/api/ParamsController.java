@@ -1,7 +1,8 @@
 package com.dawnfz.potcopyapi.controller.api;
 
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
-import com.dawnfz.potcopyapi.service.abst.TagService;
+import com.dawnfz.potcopyapi.domain.PotType;
+import com.dawnfz.potcopyapi.service.abst.ParamsService;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 import com.dawnfz.potcopyapi.wrapper.result.JsonResult;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 
 /*
  *  Type: Class
@@ -24,15 +26,15 @@ import java.util.Arrays;
  *  Describe: [TagController类]
  */
 @Controller
-@RequestMapping("/api/Tag")
-@Tag(name = "Tag", description = "标签接口")
-public class TagController
+@RequestMapping("/api/Params")
+@Tag(name = "Params", description = "额外参数接口")
+public class ParamsController
 {
-    private final TagService tagService;
+    private final ParamsService paramsService;
 
-    public TagController(TagService tagService)
+    public ParamsController(ParamsService paramsService)
     {
-        this.tagService = tagService;
+        this.paramsService = paramsService;
     }
 
     @ResponseBody
@@ -45,8 +47,18 @@ public class TagController
     {
         // 分页限制每页只查询10条标签
         PageRequest pageRequest = new PageRequest(pageNum, 10);
-        PageResult copyInfos = tagService.getTags(pageRequest);
+        PageResult copyInfos = paramsService.getTags(pageRequest);
         return ResultUtil.success(copyInfos);
+    }
+
+    @ResponseBody
+    @RequestLimit(count = 15)
+    @Operation(summary = "查询洞天类型")
+    @GetMapping("/types")
+    public JsonResult getPotTypes() throws SQLException
+    {
+        List<PotType> potTypes = paramsService.getPotTypes();
+        return ResultUtil.success(potTypes);
     }
 
     @ResponseBody
@@ -55,7 +67,7 @@ public class TagController
     @PostMapping("/addTags")
     public JsonResult addTags(@RequestParam("tagName") String[] tagNames) throws SQLException
     {
-        boolean b = tagService.addTags(tagNames);
+        boolean b = paramsService.addTags(tagNames);
         return b ? ResultUtil.success("标签" + Arrays.toString(tagNames) + "添加成功") : ResultUtil.error("添加失败");
     }
 }

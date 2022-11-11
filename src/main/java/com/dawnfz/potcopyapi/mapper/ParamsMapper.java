@@ -1,5 +1,6 @@
 package com.dawnfz.potcopyapi.mapper;
 
+import com.dawnfz.potcopyapi.domain.PotType;
 import com.dawnfz.potcopyapi.domain.Tag;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,7 +17,7 @@ import java.util.List;
  *  Describe: [TagMapper接口]
  */
 @Mapper
-public interface TagMapper
+public interface ParamsMapper
 {
     // 添加一个标签到数据库
     int addTag(@Param("tagName") String tagName) throws SQLException;
@@ -32,4 +33,7 @@ public interface TagMapper
 
     // 根据标签从中间表查询含有该标签的 CopyInfo
     List<String> getCopyIds(String tagNames) throws SQLException;
+
+    // 获得所有洞天类型
+    List<PotType> getPotTypes() throws SQLException;
 }

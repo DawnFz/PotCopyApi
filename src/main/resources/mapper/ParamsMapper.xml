@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dawnfz.potcopyapi.mapper.TagMapper">
+<mapper namespace="com.dawnfz.potcopyapi.mapper.ParamsMapper">
 
     <!-- 添加一条标签关联摹本记录 -->
     <insert id="addTagForCopyInfo">
@@ -28,6 +28,13 @@
     <select id="getTags" resultType="com.dawnfz.potcopyapi.domain.Tag">
         select *
         from t_tag
+        order by id
+    </select>
+
+    <!-- 查询所有的 PotType -->
+    <select id="getPotTypes" resultType="com.dawnfz.potcopyapi.domain.PotType">
+        select *
+        from t_type
         order by id
     </select>
 

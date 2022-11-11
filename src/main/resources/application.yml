@@ -58,6 +58,7 @@ config:
     excludePaths:
       - /api/Info/copyInfo
       - /api/Info/copyInfos
-      - /api/Tag/tags
+      - /api/Params/tags
+      - /api/Params/types
 
 

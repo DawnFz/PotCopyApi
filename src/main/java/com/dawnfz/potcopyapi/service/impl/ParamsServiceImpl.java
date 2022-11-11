@@ -1,8 +1,9 @@
 package com.dawnfz.potcopyapi.service.impl;
 
+import com.dawnfz.potcopyapi.domain.PotType;
 import com.dawnfz.potcopyapi.domain.Tag;
-import com.dawnfz.potcopyapi.mapper.TagMapper;
-import com.dawnfz.potcopyapi.service.abst.TagService;
+import com.dawnfz.potcopyapi.mapper.ParamsMapper;
+import com.dawnfz.potcopyapi.service.abst.ParamsService;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 import com.github.pagehelper.Page;
@@ -24,19 +25,19 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class TagServiceImpl implements TagService
+public class ParamsServiceImpl implements ParamsService
 {
-    private final TagMapper tagMapper;
+    private final ParamsMapper paramsMapper;
 
-    public TagServiceImpl(TagMapper tagMapper)
+    public ParamsServiceImpl(ParamsMapper paramsMapper)
     {
-        this.tagMapper = tagMapper;
+        this.paramsMapper = paramsMapper;
     }
 
     @Override
     public boolean addTag(String tagName) throws SQLException
     {
-        return tagMapper.addTag(tagName) > 0;
+        return paramsMapper.addTag(tagName) > 0;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class TagServiceImpl implements TagService
         boolean addSuccess = true;
         for (String tagName : tagNames)
         {
-            int cnt = tagMapper.addTag(tagName);
+            int cnt = paramsMapper.addTag(tagName);
             if (cnt == 0) addSuccess = false;
         }
         return addSuccess;
@@ -57,7 +58,7 @@ public class TagServiceImpl implements TagService
         int pageSize = pageRequest.getPageSize();
         int pageNum = pageRequest.getPageNum();
         Page<Object> page = PageHelper.startPage(pageNum, pageSize);
-        List<Tag> tags = tagMapper.getTags();
+        List<Tag> tags = paramsMapper.getTags();
         long total = page.getTotal();
         int totalPages = page.getPages();
         if (tags.size() == 0) tags = new ArrayList<>();
@@ -67,5 +68,13 @@ public class TagServiceImpl implements TagService
         pageResult.setTotalSize(total);
         pageResult.setTotalPages(totalPages);
         return pageResult;
+    }
+
+    @Override
+    public List<PotType> getPotTypes() throws SQLException
+    {
+        List<PotType> potTypes = paramsMapper.getPotTypes();
+        if (potTypes.size() == 0) potTypes = new ArrayList<>();
+        return potTypes;
     }
 }
