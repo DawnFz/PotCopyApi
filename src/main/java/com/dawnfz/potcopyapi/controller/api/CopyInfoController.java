@@ -2,6 +2,7 @@ package com.dawnfz.potcopyapi.controller.api;
 
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
 import com.dawnfz.potcopyapi.domain.CopyInfo;
+import com.dawnfz.potcopyapi.exception.ControlException;
 import com.dawnfz.potcopyapi.service.abst.CopyInfoService;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
@@ -73,16 +74,16 @@ public class CopyInfoController
     }
 
     @ResponseBody
-    @RequestLimit(count = 1) // 限制每分钟只能请求一次
+    @RequestLimit(message = "每分钟只能分享一个摹本喔！", count = 1) // 限制每分钟只能请求一次
     @Operation(summary = "由玩家上传(分享)一个洞天摹本")
     @PostMapping("/shareCopyInfo")
     public JsonResult addCopyInfo(@RequestParam("copyId")
                                   @Parameter(description = "摹本编号") Long copyId,
                                   @RequestParam("copyName")
                                   @Parameter(description = "摹本名称") String copyName,
-                                  @RequestParam("potType")
+                                  @RequestParam("typeId")
                                   @Parameter(description = "洞天类型[id]") Integer typeId,
-                                  @RequestParam("blockName")
+                                  @RequestParam("blockId")
                                   @Parameter(description = "所在区域[id]") Integer blockId,
                                   @RequestParam("uploadUid")
                                   @Parameter(description = "上传者Uid") Integer uploadUid,
@@ -91,7 +92,8 @@ public class CopyInfoController
                                   @RequestParam("imageUrls")
                                   @Parameter(description = "图片链接") String[] imageUrls,
                                   @RequestParam("description")
-                                  @Parameter(description = "摹本简介/描述") String description) throws SQLException
+                                  @Parameter(description = "摹本简介/描述") String description)
+            throws SQLException
     {
         CopyInfo copyInfo = new CopyInfo();
         copyInfo.setCopyId(String.valueOf(copyId));

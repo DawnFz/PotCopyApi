@@ -1,11 +1,14 @@
 package com.dawnfz.potcopyapi.service.abst;
 
+import com.dawnfz.potcopyapi.domain.Block;
 import com.dawnfz.potcopyapi.domain.PotType;
+import com.dawnfz.potcopyapi.exception.ControlException;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /*
  *  Type: Interface
@@ -21,7 +24,13 @@ public interface ParamsService
 
     boolean addTags(String[] tagNames) throws SQLException;
 
+    boolean addBlock(String[] blockName) throws SQLException;
+
+    boolean addTypeBlock(Map<Integer, Integer> blockMap) throws SQLException;
+
     PageResult getTags(PageRequest pageRequest) throws SQLException;
 
     List<PotType> getPotTypes() throws SQLException;
+
+    List<Block> getBlocks(Integer typeId) throws SQLException;
 }

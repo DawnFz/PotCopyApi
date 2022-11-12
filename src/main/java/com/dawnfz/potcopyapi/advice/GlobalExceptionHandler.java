@@ -36,6 +36,11 @@ public class GlobalExceptionHandler
     @ExceptionHandler(value = Exception.class)
     public JsonResult errorHandler(HttpServletRequest req, Exception e) throws Exception
     {
+        // 判断是否为自定义异常信息[操作异常]
+        if (ExceptionUtil.isControlException(e))
+        {
+            return ResultUtil.error(e.getMessage());
+        }
         System.err.println("+--------------------- GlobalExceptionHandler -------------------+\n");
         e.printStackTrace();
         System.err.println("\n+----------------------------------------------------------------+");

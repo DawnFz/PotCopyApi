@@ -1,6 +1,7 @@
 package com.dawnfz.potcopyapi.service.abst;
 
 import com.dawnfz.potcopyapi.domain.CopyInfo;
+import com.dawnfz.potcopyapi.exception.ControlException;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 

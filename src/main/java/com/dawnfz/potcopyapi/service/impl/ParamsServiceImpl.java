@@ -1,5 +1,6 @@
 package com.dawnfz.potcopyapi.service.impl;
 
+import com.dawnfz.potcopyapi.domain.Block;
 import com.dawnfz.potcopyapi.domain.PotType;
 import com.dawnfz.potcopyapi.domain.Tag;
 import com.dawnfz.potcopyapi.mapper.ParamsMapper;
@@ -8,12 +9,15 @@ import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /*
  *  Type: Class
@@ -43,10 +47,50 @@ public class ParamsServiceImpl implements ParamsService
     @Override
     public boolean addTags(String[] tagNames) throws SQLException
     {
-        boolean addSuccess = true;
-        for (String tagName : tagNames)
+        try
         {
-            int cnt = paramsMapper.addTag(tagName);
+            boolean addSuccess = true;
+            for (String tagName : tagNames)
+            {
+                int cnt = paramsMapper.addTag(tagName);
+                if (cnt == 0) addSuccess = false;
+            }
+            return addSuccess;
+        }
+        catch (DuplicateKeyException e)
+        {
+            throw new DuplicateKeyException("不允许添加重复标签");
+        }
+    }
+
+    @Override
+    public boolean addBlock(String[] blockNames) throws SQLException
+    {
+        try
+        {
+            boolean addSuccess = true;
+            for (String blockName : blockNames)
+            {
+                int cnt = paramsMapper.addBlock(blockName);
+                if (cnt == 0) addSuccess = false;
+            }
+            return addSuccess;
+        }
+        catch (DuplicateKeyException e)
+        {
+            throw new DuplicateKeyException("不允许添加重复区域");
+        }
+    }
+
+    @Override
+    public boolean addTypeBlock(Map<Integer, Integer> blockMap) throws SQLException
+    {
+        boolean addSuccess = true;
+        Set<Integer> typeIds = blockMap.keySet();
+        for (Integer typeId : typeIds)
+        {
+            Integer blockId = blockMap.get(typeId);
+            int cnt = paramsMapper.addTypeBlock(typeId, blockId);
             if (cnt == 0) addSuccess = false;
         }
         return addSuccess;
@@ -76,5 +120,13 @@ public class ParamsServiceImpl implements ParamsService
         List<PotType> potTypes = paramsMapper.getPotTypes();
         if (potTypes.size() == 0) potTypes = new ArrayList<>();
         return potTypes;
+    }
+
+    @Override
+    public List<Block> getBlocks(Integer typeId) throws SQLException
+    {
+        List<Block> blocks = paramsMapper.getBlocks(typeId);
+        if (blocks.size() == 0) blocks = new ArrayList<>();
+        return blocks;
     }
 }

@@ -1,7 +1,9 @@
 package com.dawnfz.potcopyapi.controller.api;
 
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
+import com.dawnfz.potcopyapi.domain.Block;
 import com.dawnfz.potcopyapi.domain.PotType;
+import com.dawnfz.potcopyapi.exception.ControlException;
 import com.dawnfz.potcopyapi.service.abst.ParamsService;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
@@ -14,8 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /*
  *  Type: Class
@@ -61,13 +62,62 @@ public class ParamsController
         return ResultUtil.success(potTypes);
     }
 
+
+    @ResponseBody
+    @RequestLimit(count = 15)
+    @Operation(summary = "查询对应洞天类型的区域")
+    @GetMapping("/blocks")
+    public JsonResult getBlocks(@RequestParam("typeId")
+                                @Parameter(description = "洞天类型Id")
+                                Integer typeId) throws SQLException
+    {
+        List<Block> blocks = paramsService.getBlocks(typeId);
+        return ResultUtil.success(blocks);
+    }
+
     @ResponseBody
     @RequestLimit(count = 2) //限制每分钟只能请求2次
-    @Operation(summary = "[测试]用于增加新的标签(多)")
+    @Operation(summary = "用于增加新的标签(多)")
     @PostMapping("/addTags")
-    public JsonResult addTags(@RequestParam("tagName") String[] tagNames) throws SQLException
+    public JsonResult addTags(@RequestParam("tagName") String[] tagNames) throws SQLException, ControlException
     {
         boolean b = paramsService.addTags(tagNames);
         return b ? ResultUtil.success("标签" + Arrays.toString(tagNames) + "添加成功") : ResultUtil.error("添加失败");
+    }
+
+
+    @ResponseBody
+    @RequestLimit(count = 2)
+    @Operation(summary = "用于增加新的洞天区域(多)")
+    @PostMapping("/addBlocks")
+    public JsonResult addBlocks(@RequestParam("blockNames") String[] blockNames) throws SQLException, ControlException
+    {
+        boolean b = paramsService.addBlock(blockNames);
+        return b ? ResultUtil.success("洞天区域" + Arrays.toString(blockNames) + "添加成功") : ResultUtil.error("添加失败");
+    }
+
+    @ResponseBody
+    @RequestLimit(count = 2)
+    @Operation(summary = "用于增加新的洞天区域(多)")
+    @PostMapping("/addTypeBlocks")
+    public JsonResult addTypeBlocks(@RequestParam("typeIds") Integer[] typeIds,
+                                    @RequestParam("blockIds") Integer[] blockIds) throws SQLException
+    {
+        if (typeIds.length != blockIds.length) return ResultUtil.error("参数有误，数据数量不匹配");
+        Map<Integer, Integer> blockMap = new HashMap<>();
+        for (int i = 0; i < typeIds.length; i++)
+        {
+            blockMap.put(typeIds[i], blockIds[i]);
+        }
+        boolean b = paramsService.addTypeBlock(blockMap);
+        List<Block> blocks = new ArrayList<>();
+        blockMap.forEach((typeId, blockId) ->
+        {
+            Block block = new Block();
+            block.setTypeId(typeId);
+            block.setBlockId(blockId);
+            blocks.add(block);
+        });
+        return b ? ResultUtil.success("类型与区域" + blocks + "关联成功") : ResultUtil.error("添加失败");
     }
 }

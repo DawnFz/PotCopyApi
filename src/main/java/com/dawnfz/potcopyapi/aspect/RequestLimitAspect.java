@@ -9,7 +9,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -53,8 +52,9 @@ public class RequestLimitAspect
         ExpirationPolicy created = ExpirationPolicy.CREATED;
         String rAddr = request.getRemoteAddr();
         long time = requestLimit.time();
-
-        if (count >= requestLimit.count()) return ResultUtil.error("请求频率过快，请稍后再试");
+        // 从注解中获取返回的信息
+        String message = requestLimit.message();
+        if (count >= requestLimit.count()) return ResultUtil.error(message);
         else if (count == 0) expiringMap.put(rAddr, count + 1, created, time, TimeUnit.MILLISECONDS);
         else expiringMap.put(request.getRemoteAddr(), count + 1);
         map.put(request.getRequestURI(), expiringMap);

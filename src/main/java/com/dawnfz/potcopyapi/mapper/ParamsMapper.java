@@ -1,5 +1,6 @@
 package com.dawnfz.potcopyapi.mapper;
 
+import com.dawnfz.potcopyapi.domain.Block;
 import com.dawnfz.potcopyapi.domain.PotType;
 import com.dawnfz.potcopyapi.domain.Tag;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,6 +23,12 @@ public interface ParamsMapper
     // 添加一个标签到数据库
     int addTag(@Param("tagName") String tagName) throws SQLException;
 
+    //添加一个新的洞天类型
+    int addBlock(@Param("blockName") String blockName) throws SQLException;
+
+    // 添加一个与 洞天类型关联的 洞天区域
+    int addTypeBlock(@Param("typeId") Integer typeId, @Param("blockId") Integer blockId) throws SQLException;
+
     // 添加一条与 CopyInfo 关联的 Tag 到中间表
     int addTagForCopyInfo(@Param("tagId") Integer tagId, @Param("copyId") String copyId) throws SQLException;
 
@@ -36,4 +43,7 @@ public interface ParamsMapper
 
     // 获得所有洞天类型
     List<PotType> getPotTypes() throws SQLException;
+
+    // 查询对应洞天类型的洞天区域
+    List<Block> getBlocks(@Param("typeId") Integer typeId) throws SQLException;
 }

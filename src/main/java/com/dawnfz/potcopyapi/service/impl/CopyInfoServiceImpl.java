@@ -9,6 +9,7 @@ import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,26 +42,25 @@ public class CopyInfoServiceImpl implements CopyInfoService
     @Override
     public boolean addCopyInfo(CopyInfo copyInfo, Integer[] tagIds, String[] imageUrls) throws SQLException
     {
-        boolean tagsInsert = true;
-        boolean imgsInsert = true;
-
-        String copyId = copyInfo.getCopyId();
-        CopyInfo info = copyInfoMapper.getCopyInfoById(copyId);
-        if (info != null) return false;
-        int addCnt = copyInfoMapper.addCopyInfo(copyInfo);
-        if (addCnt == 0) return false;
-        // 待优化
-        for (Integer tagId : tagIds)
+        try
         {
-            int tagCnt = paramsMapper.addTagForCopyInfo(tagId, copyId);
-            if (tagCnt == 0) tagsInsert = false;
+            String copyId = copyInfo.getCopyId();
+            int addCnt = copyInfoMapper.addCopyInfo(copyInfo);
+            if (addCnt == 0) return false;
+            for (Integer tagId : tagIds)
+            {
+                paramsMapper.addTagForCopyInfo(tagId, copyId);
+            }
+            for (String imageUrl : imageUrls)
+            {
+                copyInfoMapper.addImageForCopyInfo(imageUrl, copyId);
+            }
+            return true;
         }
-        for (String imageUrl : imageUrls)
+        catch (DuplicateKeyException e)
         {
-            int imgCnt = copyInfoMapper.addImageForCopyInfo(imageUrl, copyId);
-            if (imgCnt == 0) imgsInsert = false;
+            throw new DuplicateKeyException("无法添加，因为已存在该摹本信息");
         }
-        return tagsInsert && imgsInsert;
     }
 
     // 根据 洞天摹本的编号 获得摹本信息
@@ -85,7 +85,7 @@ public class CopyInfoServiceImpl implements CopyInfoService
             copyIdsStr = generateSql(copyIds);
         }
         Page<Object> page = PageHelper.startPage(pageNum, pageSize);
-        List<CopyInfoDto> copyInfos = copyInfoMapper.getCopyInfos(copyName,typeId,blockId, copyIdsStr);
+        List<CopyInfoDto> copyInfos = copyInfoMapper.getCopyInfos(copyName, typeId, blockId, copyIdsStr);
         long total = page.getTotal();
         int totalPages = page.getPages();
         if (copyInfos.size() == 0) copyInfos = new ArrayList<>();

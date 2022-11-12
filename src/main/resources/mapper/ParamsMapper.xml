@@ -46,4 +46,40 @@
         where tt.tagName in (${tagNames})
     </select>
 
+    <!-- Block结果集映射 -->
+    <resultMap id="blockMap" type="com.dawnfz.potcopyapi.domain.Block">
+        <result column="typeId" property="typeId"/>
+        <result column="blockId" property="blockId"/>
+        <!-- 区域字段子查询 -->
+        <collection property="blockName" column="{blockId=blockId}"
+                    select="getBlockName"
+                    ofType="string" javaType="string"/>
+    </resultMap>
+
+    <!-- 子查询 - 查询区域名 -->
+    <select id="getBlockName" resultType="string">
+        select blockName
+        from t_block
+        where id = #{blockId}
+    </select>
+
+    <!-- 根据 typeId 查询 blockId结果集 -->
+    <select id="getBlocks" resultMap="blockMap">
+        select *
+        from t_type_block
+        where typeId = #{typeId}
+    </select>
+
+    <!-- 添加一种洞天类型 -->
+    <insert id="addBlock">
+        insert into t_block (id, blockName)
+        values (null, #{blockName});
+    </insert>
+
+    <!-- 添加一条关联记录到 t_type_block 中 -->
+    <insert id="addTypeBlock">
+        insert into t_type_block(id, typeId, blockName)
+        values (null, #{typeId}, #{blockId})
+    </insert>
+
 </mapper>

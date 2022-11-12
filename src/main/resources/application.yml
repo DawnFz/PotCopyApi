@@ -55,10 +55,10 @@ config:
   auth:
     sourceKey: Test Key
   url:
-    excludePaths:
-      - /api/Info/copyInfo
-      - /api/Info/copyInfos
-      - /api/Params/tags
-      - /api/Params/types
+    paths:
+      - /api/Info/addCopyInfo
+      - /api/Info/addTags
+      - /api/Params/addBlocks
+      - /api/Params/addTypeBlocks
 
 

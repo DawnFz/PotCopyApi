@@ -22,11 +22,11 @@ import java.util.List;
 @ConfigurationProperties(prefix = "config.url")
 public class TokenInterceptorConfig implements WebMvcConfigurer
 {
-    List<String> excludePaths;
+    List<String> paths;
 
-    public List<String> getExcludePaths() {return excludePaths;}
+    public List<String> getPaths() {return paths;}
 
-    public void setExcludePaths(List<String> excludePaths) {this.excludePaths = excludePaths;}
+    public void setPaths(List<String> paths) {this.paths = paths;}
 
     @Resource
     private TokenInterceptor interceptor;
@@ -34,17 +34,7 @@ public class TokenInterceptorConfig implements WebMvcConfigurer
     @Override
     public void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(interceptor).addPathPatterns("/**")
-                // 白名单
-                .excludePathPatterns("/swagger-ui.html")
-                .excludePathPatterns("/swagger-ui/**")
-                .excludePathPatterns("/*.html")
-                .excludePathPatterns("/favicon.ico")
-                .excludePathPatterns("/**/*.html")
-                .excludePathPatterns("/**/*.css")
-                .excludePathPatterns("/**/*.js")
-                .excludePathPatterns("/swagger-resources/**")
-                .excludePathPatterns("/v3/api-docs/**")
-                .excludePathPatterns(excludePaths);
+        registry.addInterceptor(interceptor)
+                .addPathPatterns(paths);
     }
 }

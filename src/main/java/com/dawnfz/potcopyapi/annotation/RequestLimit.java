@@ -15,7 +15,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestLimit
 {
+    String message() default "请求频率过快，请稍后再试";
+
     long time() default 60000;
 
     int count() default 10;
+
 }
