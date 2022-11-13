@@ -78,7 +78,7 @@
 
     <!-- 添加一条关联记录到 t_type_block 中 -->
     <insert id="addTypeBlock">
-        insert into t_type_block(id, typeId, blockName)
+        insert into t_type_block(id, typeId, blockId)
         values (null, #{typeId}, #{blockId})
     </insert>
 

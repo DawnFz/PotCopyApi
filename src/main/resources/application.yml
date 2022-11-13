@@ -55,10 +55,8 @@ config:
   auth:
     sourceKey: Test Key
   url:
+    # 需要访问权限的接口
     paths:
-      - /api/Info/addCopyInfo
       - /api/Info/addTags
       - /api/Params/addBlocks
       - /api/Params/addTypeBlocks
-
-

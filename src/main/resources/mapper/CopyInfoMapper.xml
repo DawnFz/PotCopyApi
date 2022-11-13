@@ -74,6 +74,7 @@
         <if test="copyIds!=null">
             and copyId in (${copyIds})
         </if>
+        order by id desc
     </select>
 
     <!-- 根据 摹本Id 查询 摹本 记录[主查询] -->

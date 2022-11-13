@@ -11,6 +11,7 @@ import com.dawnfz.potcopyapi.wrapper.result.ResultUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,6 @@ import java.sql.SQLException;
 public class CopyInfoController
 {
     private final CopyInfoService copyInfoService;
-
     public CopyInfoController(CopyInfoService copyInfoService)
     {
         this.copyInfoService = copyInfoService;
@@ -74,7 +74,7 @@ public class CopyInfoController
     }
 
     @ResponseBody
-    @RequestLimit(message = "每分钟只能分享一个摹本喔！", count = 1) // 限制每分钟只能请求一次
+    @RequestLimit(message = "每分钟只能分享两个摹本喔！", count = 2) // 限制每分钟只能请求一次
     @Operation(summary = "由玩家上传(分享)一个洞天摹本")
     @PostMapping("/shareCopyInfo")
     public JsonResult addCopyInfo(@RequestParam("copyId")
