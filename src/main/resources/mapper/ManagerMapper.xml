@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawnfz.potcopyapi.mapper.ManagerMapper">
+
+    <!-- 添加一种洞天类型 -->
+    <insert id="addBlock">
+        insert into t_block (id, blockName)
+        values (null, #{blockName});
+    </insert>
+
+    <!-- 添加一条关联记录到 t_type_block 中 -->
+    <insert id="addTypeBlock">
+        insert into t_type_block(id, typeId, blockId)
+        values (null, #{typeId}, #{blockId})
+    </insert>
+
+    <!-- 添加一个标签 -->
+    <insert id="addTag">
+        insert into t_tag(id, tagName)
+        values (null, #{tagName})
+    </insert>
+
+    <!-- 删除一条洞天记录 -->
+    <delete id="delCopyInfo">
+        delete
+        from t_info
+        where copyId = #{copyId}
+    </delete>
+
+    <delete id="delTagForInfo">
+        delete
+        from t_tag_info
+        where copyId = #{copyId}
+    </delete>
+
+    <delete id="delImageForInfo">
+        delete
+        from t_img
+        where copyId = #{copyId}
+    </delete>
+
+    <!-- 修改一条洞天摹本的审核状态 -->
+    <update id="updateCopyInfo">
+        update t_info
+        set status=#{status}
+        where copyId = #{copyId}
+    </update>
+</mapper>

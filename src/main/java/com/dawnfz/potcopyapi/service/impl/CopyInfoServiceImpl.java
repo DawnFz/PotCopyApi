@@ -63,17 +63,24 @@ public class CopyInfoServiceImpl implements CopyInfoService
         }
     }
 
+    @Override
+    public boolean incCopyInfoHits(String copyId) throws SQLException
+    {
+        return copyInfoMapper.incCopyInfoHits(copyId) > 0;
+    }
+
     // 根据 洞天摹本的编号 获得摹本信息
     @Override
-    public CopyInfo getCopyInfoById(String copyId) throws SQLException
+    public CopyInfo getCopyInfoById(String copyId,Integer status) throws SQLException
     {
-        return copyInfoMapper.getCopyInfoById(copyId);
+        // status = 0 代表已过审核的摹本
+        return copyInfoMapper.getCopyInfoById(copyId, status);
     }
 
     // 查询所有的洞天摹本[分页][模糊查询]
     @Override
     public PageResult getCopyInfos(PageRequest pageRequest, String copyName, Integer typeId,
-                                   Integer blockId, String[] tagNames) throws SQLException
+                                   Integer blockId, String[] tagNames,Integer status) throws SQLException
     {
         int pageSize = pageRequest.getPageSize();
         int pageNum = pageRequest.getPageNum();
@@ -85,7 +92,8 @@ public class CopyInfoServiceImpl implements CopyInfoService
             copyIdsStr = generateSql(copyIds);
         }
         Page<Object> page = PageHelper.startPage(pageNum, pageSize);
-        List<CopyInfoDto> copyInfos = copyInfoMapper.getCopyInfos(copyName, typeId, blockId, copyIdsStr);
+        // status = 0 代表已过审核的摹本
+        List<CopyInfoDto> copyInfos = copyInfoMapper.getCopyInfos(copyName, typeId, blockId, copyIdsStr, status);
         long total = page.getTotal();
         int totalPages = page.getPages();
         if (copyInfos.size() == 0) copyInfos = new ArrayList<>();

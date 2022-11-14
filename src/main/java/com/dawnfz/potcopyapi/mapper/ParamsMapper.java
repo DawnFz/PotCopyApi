@@ -20,15 +20,6 @@ import java.util.List;
 @Mapper
 public interface ParamsMapper
 {
-    // 添加一个标签到数据库
-    int addTag(@Param("tagName") String tagName) throws SQLException;
-
-    //添加一个新的洞天类型
-    int addBlock(@Param("blockName") String blockName) throws SQLException;
-
-    // 添加一个与 洞天类型关联的 洞天区域
-    int addTypeBlock(@Param("typeId") Integer typeId, @Param("blockId") Integer blockId) throws SQLException;
-
     // 添加一条与 CopyInfo 关联的 Tag 到中间表
     int addTagForCopyInfo(@Param("tagId") Integer tagId, @Param("copyId") String copyId) throws SQLException;
 

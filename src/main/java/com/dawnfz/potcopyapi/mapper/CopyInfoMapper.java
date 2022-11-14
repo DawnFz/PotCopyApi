@@ -25,14 +25,19 @@ public interface CopyInfoMapper
     // 添加一条 摹本图片信息 到数据库
     int addImageForCopyInfo(@Param("imageUrl") String imageUrl, @Param("copyId") String copyId);
 
+    // 点击量自增
+    int incCopyInfoHits(@Param("copyId") String copyId) throws SQLException;
+
     // 根据摹本 copyId 查询 摹本信息
-    CopyInfo getCopyInfoById(@Param("copyId") String copyId) throws SQLException;
+    CopyInfo getCopyInfoById(@Param("copyId") String copyId,
+                             @Param("status") Integer status) throws SQLException;
 
     // 查询所有的摹本[根据名称模糊]
     List<CopyInfoDto> getCopyInfos(@Param("copyName") String copyName,
                                    @Param("typeId") Integer typeId,
                                    @Param("blockId") Integer blockId,
-                                   @Param("copyIds") String copyIds) throws SQLException;
+                                   @Param("copyIds") String copyIds,
+                                   @Param("status") Integer status) throws SQLException;
 
     // 查询所有的摹本[根据标签]
     List<CopyInfo> getCopyInfosByTags(@Param("tags") String[] tags) throws SQLException;

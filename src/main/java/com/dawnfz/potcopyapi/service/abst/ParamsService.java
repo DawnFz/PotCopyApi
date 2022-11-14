@@ -20,14 +20,6 @@ import java.util.Map;
  */
 public interface ParamsService
 {
-    boolean addTag(String tagName) throws SQLException;
-
-    boolean addTags(String[] tagNames) throws SQLException;
-
-    boolean addBlock(String[] blockName) throws SQLException;
-
-    boolean addTypeBlock(Map<Integer, Integer> blockMap) throws SQLException;
-
     PageResult getTags(PageRequest pageRequest) throws SQLException;
 
     List<PotType> getPotTypes() throws SQLException;

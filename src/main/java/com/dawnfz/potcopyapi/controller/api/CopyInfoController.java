@@ -1,5 +1,6 @@
 package com.dawnfz.potcopyapi.controller.api;
 
+import com.dawnfz.potcopyapi.annotation.InfoIncrement;
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
 import com.dawnfz.potcopyapi.domain.CopyInfo;
 import com.dawnfz.potcopyapi.service.abst.CopyInfoService;
@@ -34,7 +35,7 @@ public class CopyInfoController
         this.copyInfoService = copyInfoService;
     }
 
-    @RequestLimit(count = 20)
+    @RequestLimit(count = 30)
     @Operation(summary = "分页查询摹本信息[支持 名称/标签 模糊查询]")
     @GetMapping("/copyInfos")
     public JsonResult getCopyInfos(@RequestParam("pageNum")
@@ -52,19 +53,20 @@ public class CopyInfoController
             throws SQLException
     {
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
-        PageResult copyInfos = copyInfoService.getCopyInfos(pageRequest, copyName, typeId, blockId, tagNames);
+        PageResult copyInfos = copyInfoService.getCopyInfos(pageRequest, copyName,
+                typeId, blockId, tagNames, 0);
         return ResultUtil.success(copyInfos);
     }
 
-
+    @InfoIncrement
     @RequestLimit(count = 20)
-    @Operation(summary = "根据 摹本编号 查询摹本信息")
+    @Operation(summary = "根据 摹本编号 查询摹本信息[已审核]")
     @GetMapping("/copyInfo")
     public JsonResult getCopyInfo(@RequestParam("copyId")
                                   @Parameter(description = "摹本编号")
-                                  Long copyId) throws SQLException
+                                  String copyId) throws SQLException
     {
-        CopyInfo copyInfo = copyInfoService.getCopyInfoById(String.valueOf(copyId));
+        CopyInfo copyInfo = copyInfoService.getCopyInfoById(copyId, 0);
         if (copyInfo == null) return ResultUtil.error("该摹本不存在");
         return ResultUtil.success(copyInfo);
     }
@@ -73,7 +75,7 @@ public class CopyInfoController
     @Operation(summary = "由玩家上传(分享)一个洞天摹本")
     @PostMapping("/shareCopyInfo")
     public JsonResult addCopyInfo(@RequestParam("copyId")
-                                  @Parameter(description = "摹本摹数") Long copyId,
+                                  @Parameter(description = "摹本摹数") String copyId,
                                   @RequestParam("copyName")
                                   @Parameter(description = "摹本名称") String copyName,
                                   @RequestParam("typeId")
@@ -93,7 +95,7 @@ public class CopyInfoController
             throws SQLException
     {
         CopyInfo copyInfo = new CopyInfo();
-        copyInfo.setCopyId(String.valueOf(copyId));
+        copyInfo.setCopyId(copyId);
         copyInfo.setCopyName(copyName);
         copyInfo.setTypeId(typeId);
         copyInfo.setBlockId(blockId);

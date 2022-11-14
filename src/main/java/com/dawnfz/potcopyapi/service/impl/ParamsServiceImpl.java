@@ -39,64 +39,6 @@ public class ParamsServiceImpl implements ParamsService
     }
 
     @Override
-    public boolean addTag(String tagName) throws SQLException
-    {
-        return paramsMapper.addTag(tagName) > 0;
-    }
-
-    @Override
-    public boolean addTags(String[] tagNames) throws SQLException
-    {
-        try
-        {
-            boolean addSuccess = true;
-            for (String tagName : tagNames)
-            {
-                int cnt = paramsMapper.addTag(tagName);
-                if (cnt == 0) addSuccess = false;
-            }
-            return addSuccess;
-        }
-        catch (DuplicateKeyException e)
-        {
-            throw new DuplicateKeyException("不允许添加重复标签");
-        }
-    }
-
-    @Override
-    public boolean addBlock(String[] blockNames) throws SQLException
-    {
-        try
-        {
-            boolean addSuccess = true;
-            for (String blockName : blockNames)
-            {
-                int cnt = paramsMapper.addBlock(blockName);
-                if (cnt == 0) addSuccess = false;
-            }
-            return addSuccess;
-        }
-        catch (DuplicateKeyException e)
-        {
-            throw new DuplicateKeyException("不允许添加重复区域");
-        }
-    }
-
-    @Override
-    public boolean addTypeBlock(Map<Integer, Integer> blockMap) throws SQLException
-    {
-        boolean addSuccess = true;
-        Set<Integer> typeIds = blockMap.keySet();
-        for (Integer typeId : typeIds)
-        {
-            Integer blockId = blockMap.get(typeId);
-            int cnt = paramsMapper.addTypeBlock(typeId, blockId);
-            if (cnt == 0) addSuccess = false;
-        }
-        return addSuccess;
-    }
-
-    @Override
     public PageResult getTags(PageRequest pageRequest) throws SQLException
     {
         int pageSize = pageRequest.getPageSize();

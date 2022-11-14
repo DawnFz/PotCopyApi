@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 
 /*
@@ -23,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *  Version: 1.0
  *  Describe: [AuthorizedController类]
  */
-@Controller
+@RestController
 @RequestMapping("/api/Auth")
 @Tag(name = "Auth", description = "授权接口[测试期间启用]")
 @ConfigurationProperties(prefix = "config.auth")
@@ -42,7 +39,6 @@ public class AuthController
 
     public void setSourceKey(String sourceKey) {this.sourceKey = sourceKey;}
 
-    @ResponseBody
     @Operation(summary = "根据授予的Key获得可使用授权部分接口的Token")
     @PostMapping(value = "/getToken")
     public JsonResult login(@RequestParam("grantee") @Parameter(description = "获取者") String grantee,

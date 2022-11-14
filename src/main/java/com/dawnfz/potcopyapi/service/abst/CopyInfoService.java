@@ -19,7 +19,9 @@ public interface CopyInfoService
 {
     boolean addCopyInfo(CopyInfo copyInfo, Integer[] tagIds, String[] imageUrls) throws SQLException;
 
-    CopyInfo getCopyInfoById(String copyId) throws SQLException;
+    boolean incCopyInfoHits(String copyId) throws SQLException;
 
-    PageResult getCopyInfos(PageRequest pageRequest, String copyName, Integer typeId, Integer blockId, String[] tagNames) throws SQLException;
+    CopyInfo getCopyInfoById(String copyId,Integer status) throws SQLException;
+
+    PageResult getCopyInfos(PageRequest pageRequest, String copyName, Integer typeId, Integer blockId, String[] tagNames,Integer status) throws SQLException;
 }

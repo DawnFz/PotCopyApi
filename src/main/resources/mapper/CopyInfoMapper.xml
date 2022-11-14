@@ -62,7 +62,7 @@
     <select id="getCopyInfos" resultMap="copyInfos">
         select *
         from t_info
-        where true
+        where status = #{status}
         <if test="copyName!=null">
             and copyName like CONCAT('%', #{copyName},'%')
         </if>
@@ -83,6 +83,7 @@
         select *
         from t_info
         where copyId = #{copyId}
+          and status = #{status}
     </select>
 
     <!-- 标签子查询 -->
@@ -127,4 +128,11 @@
         insert into t_img(copyId, imageUrl)
         values (#{copyId}, #{imageUrl})
     </insert>
+
+    <!-- 点击量自增 -->
+    <update id="incCopyInfoHits">
+        update t_info
+        set hits =hits + 1
+        where copyId = #{copyId}
+    </update>
 </mapper>

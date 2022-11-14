@@ -11,12 +11,6 @@
         values (#{tagId}, #{copyId})
     </insert>
 
-    <!-- 添加一个标签 -->
-    <insert id="addTag">
-        insert into t_tag(id, tagName)
-        values (null, #{tagName})
-    </insert>
-
     <!-- 根据 TagId 查询 Tag -->
     <select id="getTagByName" resultType="integer">
         select id
@@ -70,16 +64,5 @@
         where typeId = #{typeId}
     </select>
 
-    <!-- 添加一种洞天类型 -->
-    <insert id="addBlock">
-        insert into t_block (id, blockName)
-        values (null, #{blockName});
-    </insert>
-
-    <!-- 添加一条关联记录到 t_type_block 中 -->
-    <insert id="addTypeBlock">
-        insert into t_type_block(id, typeId, blockId)
-        values (null, #{typeId}, #{blockId})
-    </insert>
 
 </mapper>
