@@ -23,9 +23,10 @@ public class CopyInfo
     private String copyName;
     private Integer typeId;
     private Integer blockId;
+    private String author;
     private String uploadTime;
-    private Integer uploadUid;
     private Integer hits;
+    private String origin;
     private String description;
     private Integer status;
     // 映射 - 字符串
@@ -37,6 +38,7 @@ public class CopyInfo
     private List<String> tags = new ArrayList<>();
 
     // 重写 toString 方法[Json]
+
     @Override
     public String toString()
     {
@@ -46,13 +48,16 @@ public class CopyInfo
         if (copyName != null) sb.append("\"copyName\":\"").append(copyName).append("\",");
         if (typeId != null) sb.append("\"typeId\":").append(typeId).append(",");
         if (blockId != null) sb.append("\"blockId\":").append(blockId).append(",");
+        if (author != null) sb.append("\"author\":\"").append(author).append("\",");
         if (uploadTime != null) sb.append("\"uploadTime\":\"").append(uploadTime).append("\",");
-        if (uploadUid != null) sb.append("\"uploadUid\":").append(uploadUid).append(",");
         if (hits != null) sb.append("\"hits\":").append(hits).append(",");
+        if (origin != null) sb.append("\"origin\":\"").append(origin).append("\",");
         if (description != null) sb.append("\"description\":\"").append(description).append("\",");
         if (status != null) sb.append("\"status\":").append(status).append(",");
         if (potType != null) sb.append("\"potType\":\"").append(potType).append("\",");
         if (blockName != null) sb.append("\"blockName\":\"").append(blockName).append("\",");
+        if (images != null) sb.append("\"images\":").append(images).append(",");
+        if (tags != null) sb.append("\"tags\":").append(tags).append(",");
         if (sb.lastIndexOf(",") != -1) sb.deleteCharAt(sb.lastIndexOf(","));
         sb.append('}');
         return sb.toString();

@@ -10,8 +10,9 @@
         <result column="copyId" property="copyId"/>
         <result column="copyName" property="copyName"/>
         <result column="potType" property="potType"/>
-        <result column="uploadUid" property="uploadUid"/>
+        <result column="author" property="author"/>
         <result column="hits" property="hits"/>
+        <result column="origin" property="origin"/>
         <result column="description" property="description"/>
         <result column="status" property="status"/>
         <!-- 类型字段子查询 -->
@@ -115,8 +116,10 @@
 
     <!-- 添加一条摹本数据 -->
     <insert id="addCopyInfo">
-        insert into t_info(id, copyId, copyName, typeId, blockId, uploadTime, uploadUid, hits, description, status)
-        values (null, #{copyId}, #{copyName}, #{typeId}, #{typeId}, now(), #{uploadUid}, 0, #{description}, 0)
+        insert into t_info(id, copyId, copyName, typeId, blockId, uploadTime,
+                           author, hits, origin, description, status)
+        values (null, #{copyId}, #{copyName}, #{typeId}, #{typeId},
+                now(), #{author}, 0, #{origin}, #{description}, 0)
     </insert>
 
     <!-- 添加一条图片关联摹本记录 -->

@@ -2,7 +2,6 @@ package com.dawnfz.potcopyapi.controller.api;
 
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
 import com.dawnfz.potcopyapi.domain.CopyInfo;
-import com.dawnfz.potcopyapi.exception.ControlException;
 import com.dawnfz.potcopyapi.service.abst.CopyInfoService;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
@@ -11,7 +10,6 @@ import com.dawnfz.potcopyapi.wrapper.result.ResultUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +29,7 @@ import java.sql.SQLException;
 public class CopyInfoController
 {
     private final CopyInfoService copyInfoService;
+
     public CopyInfoController(CopyInfoService copyInfoService)
     {
         this.copyInfoService = copyInfoService;
@@ -78,15 +77,17 @@ public class CopyInfoController
     @Operation(summary = "由玩家上传(分享)一个洞天摹本")
     @PostMapping("/shareCopyInfo")
     public JsonResult addCopyInfo(@RequestParam("copyId")
-                                  @Parameter(description = "摹本编号") Long copyId,
+                                  @Parameter(description = "摹本摹数") Long copyId,
                                   @RequestParam("copyName")
                                   @Parameter(description = "摹本名称") String copyName,
                                   @RequestParam("typeId")
                                   @Parameter(description = "洞天类型[id]") Integer typeId,
                                   @RequestParam("blockId")
                                   @Parameter(description = "所在区域[id]") Integer blockId,
-                                  @RequestParam("uploadUid")
-                                  @Parameter(description = "上传者Uid") Integer uploadUid,
+                                  @RequestParam("author")
+                                  @Parameter(description = "摹本作者") String author,
+                                  @RequestParam(value = "origin", required = false)
+                                  @Parameter(description = "摹本来源") String origin,
                                   @RequestParam("tagIds")
                                   @Parameter(description = "标签Id") Integer[] tagIds,
                                   @RequestParam("imageUrls")
@@ -100,7 +101,8 @@ public class CopyInfoController
         copyInfo.setCopyName(copyName);
         copyInfo.setTypeId(typeId);
         copyInfo.setBlockId(blockId);
-        copyInfo.setUploadUid(uploadUid);
+        copyInfo.setAuthor(author);
+        copyInfo.setOrigin(origin);
         copyInfo.setDescription(description);
         boolean b = copyInfoService.addCopyInfo(copyInfo, tagIds, imageUrls);
         if (!b) return ResultUtil.error("摹本发布失败");

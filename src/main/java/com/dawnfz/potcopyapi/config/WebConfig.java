@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer
 {
-    // 重写跨域配置
+    // 重写跨域配置 - 全部开放
     @Override
     public void addCorsMappings(CorsRegistry registry)
     {
