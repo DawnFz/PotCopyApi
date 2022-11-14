@@ -10,7 +10,6 @@ import com.dawnfz.potcopyapi.wrapper.result.ResultUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -23,7 +22,7 @@ import java.sql.SQLException;
  *  Version: 1.0
  *  Describe: [CopyInfoController类]
  */
-@Controller
+@RestController
 @RequestMapping("/api/Info")
 @Tag(name = "CopyInfo", description = "摹本接口")
 public class CopyInfoController
@@ -35,7 +34,6 @@ public class CopyInfoController
         this.copyInfoService = copyInfoService;
     }
 
-    @ResponseBody
     @RequestLimit(count = 20)
     @Operation(summary = "分页查询摹本信息[支持 名称/标签 模糊查询]")
     @GetMapping("/copyInfos")
@@ -59,7 +57,6 @@ public class CopyInfoController
     }
 
 
-    @ResponseBody
     @RequestLimit(count = 20)
     @Operation(summary = "根据 摹本编号 查询摹本信息")
     @GetMapping("/copyInfo")
@@ -72,7 +69,6 @@ public class CopyInfoController
         return ResultUtil.success(copyInfo);
     }
 
-    @ResponseBody
     @RequestLimit(message = "每分钟只能分享两个摹本喔！", count = 2) // 限制每分钟只能请求一次
     @Operation(summary = "由玩家上传(分享)一个洞天摹本")
     @PostMapping("/shareCopyInfo")
