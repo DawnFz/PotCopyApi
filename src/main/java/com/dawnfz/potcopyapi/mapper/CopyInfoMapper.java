@@ -33,7 +33,14 @@ public interface CopyInfoMapper
                              @Param("status") Integer status) throws SQLException;
 
     // 查询所有的摹本[根据名称模糊]
-    List<CopyInfoDto> getCopyInfos(@Param("copyName") String copyName,
+    List<Object> getCopyInfos(@Param("copyName") String copyName,
+                                   @Param("typeId") Integer typeId,
+                                   @Param("blockId") Integer blockId,
+                                   @Param("server") Integer server,
+                                   @Param("copyIds") String copyIds,
+                                   @Param("status") Integer status) throws SQLException;
+
+    List<Object> getManagerCopyInfos(@Param("copyName") String copyName,
                                    @Param("typeId") Integer typeId,
                                    @Param("blockId") Integer blockId,
                                    @Param("copyIds") String copyIds,

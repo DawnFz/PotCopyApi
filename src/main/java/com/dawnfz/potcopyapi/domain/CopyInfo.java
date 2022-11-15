@@ -29,9 +29,19 @@ public class CopyInfo
     private String origin;
     private String description;
     private Integer status;
+    private Integer server;
     // 映射 - 字符串
     private String potType;
     private String blockName;
+
+    private String serverName;
+
+    public String getServerName()
+    {
+        if(this.server==0) return "官方";
+        else if(this.server==1) return "哔哩";
+        else return "国际";
+    }
 
     // 映射 - 集合
     private List<String> images = new ArrayList<>();

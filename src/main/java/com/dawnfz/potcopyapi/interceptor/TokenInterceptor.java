@@ -1,14 +1,10 @@
 package com.dawnfz.potcopyapi.interceptor;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.dawnfz.potcopyapi.config.prop.TokenProperties;
-import com.dawnfz.potcopyapi.wrapper.result.ResultUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.SignatureException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,61 +21,36 @@ import java.io.IOException;
 @Component
 public class TokenInterceptor implements HandlerInterceptor
 {
+    private final TokenProperties tokenProperties;
 
-    @Resource
-    private TokenProperties tokenProperties;
+    public TokenInterceptor(TokenProperties tokenProperties)
+    {
+        this.tokenProperties = tokenProperties;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-                             Object handler) throws SignatureException, IOException
+                             Object handler) throws IOException
     {
         /* 地址过滤 */
         String uri = request.getRequestURI();
-        if (uri.contains("/Auth"))
-        {
-            return true;
-        }
+        if (uri.contains("/Auth")) return true;
         /* Token 验证 */
         String scheme = tokenProperties.getScheme();
         String sourceAuth = request.getHeader(tokenProperties.getHeader());
         String token = sourceAuth != null ? sourceAuth.replaceAll(scheme, "") : null;
-        if (token == null)
-        {
-            response.setStatus(401);
-            response.getWriter().write("");
-            return false;
-        }
-
-        Claims claims;
-        try
-        {
-            claims = tokenProperties.getTokenClaim(token);
-            if (claims == null)
-            {
-                response.setStatus(401);
-                response.getWriter().write("");
-                return false;
-            }
-            if (tokenProperties.isTokenExpired(claims.getExpiration()))
-            {
-                response.setStatus(401);
-                response.getWriter().write("");
-                return false;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            System.err.println("+-------------- Exception -------------+");
-            System.err.println(":" + e.getMessage());
-            System.err.println("+--------------------------------------+");
-            response.setContentType("text/json;charset=utf-8");
-            response.getWriter().write(JSONObject.toJSONString(ResultUtil.error(e.getMessage())));
-            return false;
-        }
-
+        if (token == null) return setUnAuthorization(response);
+        Claims claims = tokenProperties.getTokenClaim(token);
+        if (claims == null) return setUnAuthorization(response);
+        if (tokenProperties.isTokenExpired(claims.getExpiration())) return setUnAuthorization(response);
         /* 设置 identityId 用户身份ID */
         request.setAttribute("identityId", claims);
         return true;
+    }
+
+    private boolean setUnAuthorization(HttpServletResponse response)
+    {
+        response.setStatus(401);
+        return false;
     }
 }

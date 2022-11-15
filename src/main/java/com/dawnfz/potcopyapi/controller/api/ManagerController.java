@@ -85,11 +85,9 @@ public class ManagerController
         return ResultUtil.success(copyInfo);
     }
 
-
-    @RequestLimit(count = 30)
     @Operation(summary = "分页查询摹本信息[未审核]")
-    @GetMapping("/copyInfos")
-    public JsonResult getCopyInfos(@RequestParam("pageNum")
+    @GetMapping("/managerInfos")
+    public JsonResult managerInfos(@RequestParam("pageNum")
                                    @Parameter(description = "当前页数") Integer pageNum,
                                    @RequestParam("pageSize")
                                    @Parameter(description = "页内大小(数量)") Integer pageSize)
@@ -97,7 +95,7 @@ public class ManagerController
     {
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
         PageResult copyInfos = copyInfoService.getCopyInfos(pageRequest,
-                null, null, null, null, 1);
+                null, null, null, null, null, 1);
         return ResultUtil.success(copyInfos);
     }
 
@@ -125,5 +123,4 @@ public class ManagerController
         return managerService.updateCopyInfo(copyId, status) ?
                 ResultUtil.success(statusTips) : ResultUtil.error("修改失败");
     }
-
 }

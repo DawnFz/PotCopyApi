@@ -41,19 +41,9 @@ public class ParamsServiceImpl implements ParamsService
     @Override
     public PageResult getTags(PageRequest pageRequest) throws SQLException
     {
-        int pageSize = pageRequest.getPageSize();
-        int pageNum = pageRequest.getPageNum();
-        Page<Object> page = PageHelper.startPage(pageNum, pageSize);
         List<Tag> tags = paramsMapper.getTags();
-        long total = page.getTotal();
-        int totalPages = page.getPages();
         if (tags.size() == 0) tags = new ArrayList<>();
-        PageResult pageResult = new PageResult(tags);
-        pageResult.setPageNum(pageNum);
-        pageResult.setPageSize(pageSize);
-        pageResult.setTotalSize(total);
-        pageResult.setTotalPages(totalPages);
-        return pageResult;
+        return new PageResult(tags);
     }
 
     @Override

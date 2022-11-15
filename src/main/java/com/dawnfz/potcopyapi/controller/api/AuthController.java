@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -46,11 +45,10 @@ public class AuthController
     {
         AuthToken authToken = new AuthToken();
         authToken.setGrantee(grantee);
-        // 该Key作临时用
         if (sourceKey.equals(key))
         {
             String token = tokenProperties.createToken(authToken);
-            return ResultUtil.success(token);
+            return ResultUtil.success("verify success", token);
         }
         return ResultUtil.error("Key验证错误");
     }

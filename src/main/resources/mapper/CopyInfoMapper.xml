@@ -13,6 +13,7 @@
         <result column="author" property="author"/>
         <result column="hits" property="hits"/>
         <result column="origin" property="origin"/>
+        <result column="server" property="server"/>
         <result column="description" property="description"/>
         <result column="status" property="status"/>
         <!-- 类型字段子查询 -->
@@ -39,6 +40,7 @@
         <result column="copyId" property="copyId"/>
         <result column="copyName" property="copyName"/>
         <result column="potType" property="potType"/>
+        <result column="server" property="server"/>
         <!-- 类型字段子查询 -->
         <collection property="potType" column="{typeId=typeId}"
                     select="getTypeForCopyInfo"
@@ -60,6 +62,29 @@
 
     <!-- 查询数据库中所有的 摹本 记录[主查询] -->
     <select id="getCopyInfos" resultMap="copyInfos">
+        select *
+        from t_info
+        where status = #{status}
+        <if test="copyName!=null">
+            and copyName like CONCAT('%', #{copyName},'%')
+        </if>
+        <if test="typeId!=null">
+            and typeId = #{typeId}
+        </if>
+        <if test="blockId!=null">
+            and blockId = #{blockId}
+        </if>
+        <if test="server!=null">
+            and server = #{server}
+        </if>
+        <if test="copyIds!=null">
+            and copyId in (${copyIds})
+        </if>
+        order by id desc
+    </select>
+
+    <!-- 查询数据库中所有的 摹本 记录[主查询] -->
+    <select id="getManagerCopyInfos" resultMap="copyInfo">
         select *
         from t_info
         where status = #{status}
@@ -118,9 +143,9 @@
     <!-- 添加一条摹本数据 -->
     <insert id="addCopyInfo">
         insert into t_info(id, copyId, copyName, typeId, blockId, uploadTime,
-                           author, hits, origin, description, status)
+                           author, hits, origin, description, status, server)
         values (null, #{copyId}, #{copyName}, #{typeId}, #{blockId},
-                now(), #{author}, 0, #{origin}, #{description}, 0)
+                now(), #{author}, 0, #{origin}, #{description}, 1, #{server})
     </insert>
 
     <!-- 添加一条图片关联摹本记录 -->

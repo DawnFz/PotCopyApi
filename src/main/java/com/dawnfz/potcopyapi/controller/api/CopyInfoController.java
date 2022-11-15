@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 /*
  *  Type: Class
@@ -48,13 +49,15 @@ public class CopyInfoController
                                    @Parameter(description = "限定搜索洞天类型") Integer typeId,
                                    @RequestParam(value = "blockId", required = false)
                                    @Parameter(description = "限定搜索区域类型") Integer blockId,
+                                   @RequestParam(value = "server", required = false)
+                                   @Parameter(description = "限定搜索服务器类型") Integer server,
                                    @RequestParam(value = "tagNames", required = false)
                                    @Parameter(description = "标签模糊搜索参数") String[] tagNames)
             throws SQLException
     {
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
         PageResult copyInfos = copyInfoService.getCopyInfos(pageRequest, copyName,
-                typeId, blockId, tagNames, 0);
+                typeId, blockId, server, tagNames, 0);
         return ResultUtil.success(copyInfos);
     }
 
@@ -82,6 +85,8 @@ public class CopyInfoController
                                   @Parameter(description = "洞天类型[id]") Integer typeId,
                                   @RequestParam("blockId")
                                   @Parameter(description = "所在区域[id]") Integer blockId,
+                                  @RequestParam("server")
+                                  @Parameter(description = "所在区域[id]") Integer server,
                                   @RequestParam("author")
                                   @Parameter(description = "摹本作者") String author,
                                   @RequestParam(value = "origin", required = false)
@@ -100,10 +105,11 @@ public class CopyInfoController
         copyInfo.setTypeId(typeId);
         copyInfo.setBlockId(blockId);
         copyInfo.setAuthor(author);
+        copyInfo.setServer(server);
         copyInfo.setOrigin(origin);
         copyInfo.setDescription(description);
         boolean b = copyInfoService.addCopyInfo(copyInfo, tagIds, imageUrls);
         if (!b) return ResultUtil.error("摹本发布失败");
-        return ResultUtil.success("摹本发布成功");
+        return ResultUtil.success("发布成功，请等待审核 [非半夜时段预计两小时]");
     }
 }

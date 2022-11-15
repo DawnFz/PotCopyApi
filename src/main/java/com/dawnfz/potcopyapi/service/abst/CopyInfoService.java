@@ -23,5 +23,5 @@ public interface CopyInfoService
 
     CopyInfo getCopyInfoById(String copyId,Integer status) throws SQLException;
 
-    PageResult getCopyInfos(PageRequest pageRequest, String copyName, Integer typeId, Integer blockId, String[] tagNames,Integer status) throws SQLException;
+    PageResult getCopyInfos(PageRequest pageRequest, String copyName, Integer typeId, Integer blockId,Integer server, String[] tagNames,Integer status) throws SQLException;
 }
