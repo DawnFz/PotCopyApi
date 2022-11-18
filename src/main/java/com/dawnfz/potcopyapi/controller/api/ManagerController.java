@@ -94,8 +94,8 @@ public class ManagerController
             throws SQLException
     {
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
-        PageResult copyInfos = copyInfoService.getCopyInfos(pageRequest,
-                null, null, null, null, null, 1);
+        PageResult copyInfos = copyInfoService.getCopyInfos(pageRequest, null, null,
+                null, null, null, 1, null, 0);
         return ResultUtil.success(copyInfos);
     }
 
@@ -116,11 +116,11 @@ public class ManagerController
     @PostMapping("/updateInfo")
     public JsonResult updateCopyInfo(@RequestParam("copyId")
                                      @Parameter(description = "摹本摹数") String copyId,
-                                     @RequestParam("status")
-                                     @Parameter(description = "审核状态") Integer status) throws SQLException
+                                     @RequestParam("control")
+                                     @Parameter(description = "审核状态") Boolean control) throws SQLException
     {
-        String statusTips = status == 1 ? "已取消公开状态" : "已改为公开状态";
-        return managerService.updateCopyInfo(copyId, status) ?
+        String statusTips = control ? "已通过该摹本放公开状态" : "已拒绝该摹本开放申请";
+        return managerService.updateCopyInfo(copyId, control ? 0 : 2) ?
                 ResultUtil.success(statusTips) : ResultUtil.error("修改失败");
     }
 }

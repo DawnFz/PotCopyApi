@@ -64,5 +64,12 @@
         where typeId = #{typeId}
     </select>
 
+    <!-- 删除Tag记录 -->
+    <delete id="deleteTagForCopyInfo">
+        delete
+        from t_tag_info
+        where copyId = #{copyId}
+    </delete>
+
 
 </mapper>

@@ -26,6 +26,8 @@ public interface ParamsMapper
     // 根据标签名获得标签Id [备用]
     Integer getTagByName(@Param("tagName") String tagName) throws SQLException;
 
+    int deleteTagForCopyInfo(@Param("copyId") String copyId) throws SQLException;
+
     // 获取所有标签
     List<Tag> getTags() throws SQLException;
 

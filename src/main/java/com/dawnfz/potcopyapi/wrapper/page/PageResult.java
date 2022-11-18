@@ -1,5 +1,7 @@
 package com.dawnfz.potcopyapi.wrapper.page;
 
+import com.github.pagehelper.Page;
+
 import java.util.List;
 
 /*
@@ -15,9 +17,6 @@ public class PageResult
 {
     // 当前页数
     private int pageNum;
-
-    // 每页数量
-    private int pageSize;
 
     // 总查询记录
     private long totalSize;
@@ -38,19 +37,17 @@ public class PageResult
         this.content = content;
     }
 
+    public PageResult(List<?> content, Page<Object> page)
+    {
+        this.pageNum=page.getPageNum();
+        this.totalSize = page.getTotal();
+        this.totalPages = page.getPages();
+        this.content = content;
+    }
+
     public void setPageNum(int pageNum)
     {
         this.pageNum = pageNum;
-    }
-
-    public int getPageSize()
-    {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize)
-    {
-        this.pageSize = pageSize;
     }
 
     public long getTotalSize()

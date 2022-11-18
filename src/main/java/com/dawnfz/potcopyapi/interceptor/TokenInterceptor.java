@@ -1,6 +1,9 @@
 package com.dawnfz.potcopyapi.interceptor;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.dawnfz.potcopyapi.config.prop.TokenProperties;
+import com.dawnfz.potcopyapi.wrapper.result.JsonResult;
+import com.dawnfz.potcopyapi.wrapper.result.ResultUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -29,12 +32,12 @@ public class TokenInterceptor implements HandlerInterceptor
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-                             Object handler) throws IOException
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws IOException
     {
         /* 地址过滤 */
         String uri = request.getRequestURI();
-        if (uri.contains("/Auth")) return true;
+        if (uri.contains("/login")) return true;
         /* Token 验证 */
         String scheme = tokenProperties.getScheme();
         String sourceAuth = request.getHeader(tokenProperties.getHeader());
@@ -43,6 +46,13 @@ public class TokenInterceptor implements HandlerInterceptor
         Claims claims = tokenProperties.getTokenClaim(token);
         if (claims == null) return setUnAuthorization(response);
         if (tokenProperties.isTokenExpired(claims.getExpiration())) return setUnAuthorization(response);
+        if (!tokenProperties.roleLevelVerity(uri, claims))
+        {
+            JsonResult jsonResult = ResultUtil.error(401,"你没有权限访问该页面");
+            response.setContentType("text/json;charset=UTF-8");
+            response.getWriter().write(JSONObject.toJSONString(jsonResult));
+            return false;
+        }
         /* 设置 identityId 用户身份ID */
         request.setAttribute("identityId", claims);
         return true;

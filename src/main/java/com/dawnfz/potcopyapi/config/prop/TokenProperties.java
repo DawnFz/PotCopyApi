@@ -1,6 +1,7 @@
 package com.dawnfz.potcopyapi.config.prop;
 
-import com.dawnfz.potcopyapi.domain.AuthToken;
+import com.dawnfz.potcopyapi.domain.Author;
+import com.dawnfz.potcopyapi.domain.dto.AuthorDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -26,20 +28,23 @@ import java.util.Map;
 public class TokenProperties
 {
 
+    private Map<Integer, String> roleMap; // 0: Manager 1: Author
     private String scheme;
     private String secret;
     private long expire;
     private String header;
 
     // 生成Token
-    public String createToken(AuthToken auth)
+    public AuthorDto createToken(Author author)
     {
         Date nowDate = new Date();
         Date expireDate = new Date(nowDate.getTime() + expire * 1000);//过期时间
-
+        Integer roleLevel = author.getRoleLevel();
         Map<String, Object> claims = new HashMap<>();
-        claims.put("auth", auth.getGrantee());
-        return Jwts.builder()
+        claims.put("uid", author.getUid());
+        claims.put("roleLevel", roleLevel);
+        claims.put("nickName", author.getNickName());
+        String token = Jwts.builder()
                 .setIssuer("PotCopy")
                 .setHeaderParam("typ", "JWT")
                 .addClaims(claims)
@@ -47,6 +52,12 @@ public class TokenProperties
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
+        String permission = roleMap.get(roleLevel);
+        AuthorDto authorDto = new AuthorDto(author);
+        authorDto.setPermissions(permission);
+        authorDto.setToken(token);
+        return authorDto;
+
     }
 
 
@@ -70,29 +81,18 @@ public class TokenProperties
         return expirationTime.before(new Date());
     }
 
-    // 获取token失效时间
-    public Date getExpirationDateFromToken(String token)
+    // 验证权限
+    public boolean roleLevelVerity(String uri, Claims claims)
     {
-        return getTokenClaim(token).getExpiration();
+        Integer roleLevel = (Integer) claims.get("roleLevel");
+        if (roleLevel == 0) return true;
+        String s = roleMap.get(roleLevel);
+        return uri.contains(s);
     }
 
-    // 获取用户名从token中
-    public String getUsernameFromToken(String token)
-    {
-        return getTokenClaim(token).getSubject();
-    }
+    //// Getter & Setter
 
-    // 获取jwt发布时间
-    public Date getIssuedAtDateFromToken(String token)
-    {
-        return getTokenClaim(token).getIssuedAt();
-    }
-
-
-    public String getSecret()
-    {
-        return secret;
-    }
+    public String getSecret() {return secret;}
 
     public void setSecret(String secret)
     {
@@ -128,4 +128,8 @@ public class TokenProperties
     {
         this.scheme = scheme;
     }
+
+    public Map<Integer, String> getRoleMap() {return roleMap;}
+
+    public void setRoleMap(Map<Integer, String> roleMap) {this.roleMap = roleMap;}
 }

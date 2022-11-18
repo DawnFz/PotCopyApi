@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawnfz.potcopyapi.mapper.AuthorMapper">
+
+
+    <!-- login -->
+    <select id="authorLogin" resultType="com.dawnfz.potcopyapi.domain.Author">
+        select *
+        from t_author
+        where username = #{username}
+          and password = #{password}
+    </select>
+
+    <!-- search -->
+    <select id="getAuthorByUid" resultType="com.dawnfz.potcopyapi.domain.Author">
+        select *
+        from t_author
+        where uid = #{uid};
+    </select>
+
+    <!-- author list -->
+    <select id="getAuthors" resultType="com.dawnfz.potcopyapi.domain.Author">
+        select *
+        from t_author
+        where true
+        <if test="nickName!=null">
+            and nickName like CONCAT('%',#{nickName},'%')
+        </if>
+    </select>
+
+    <!-- add author -->
+    <insert id="addAuthor">
+        insert into t_author(uid, roleLevel, nickName, username, password, email, description)
+        values (null, #{roleLevel}, #{nickName}, #{username}, #{password}, #{email}, #{description})
+    </insert>
+
+    <!-- update author -->
+    <update id="updateAuthor">
+        update t_author set
+        <if test="roleLevel!=null">
+            roleLevel=#{roleLevel},
+        </if>
+        <if test="nickName!=null">
+            nickName=#{nickName},
+        </if>
+        <if test="password!=null">
+            password=#{password},
+        </if>
+        <if test="email!=null">
+            email=#{email},
+        </if>
+        <if test="description!=null">
+            description=#{description},
+        </if>
+        uid = #{uid}
+        where uid=#{uid}
+    </update>
+
+</mapper>

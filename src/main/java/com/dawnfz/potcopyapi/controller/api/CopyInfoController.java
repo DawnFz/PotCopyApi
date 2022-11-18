@@ -8,12 +8,14 @@ import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 import com.dawnfz.potcopyapi.wrapper.result.JsonResult;
 import com.dawnfz.potcopyapi.wrapper.result.ResultUtil;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -57,7 +59,7 @@ public class CopyInfoController
     {
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
         PageResult copyInfos = copyInfoService.getCopyInfos(pageRequest, copyName,
-                typeId, blockId, server, tagNames, 0);
+                typeId, blockId, server, tagNames, 0, null, null);
         return ResultUtil.success(copyInfos);
     }
 
@@ -77,39 +79,26 @@ public class CopyInfoController
     @RequestLimit(message = "每分钟只能分享两个摹本喔！", count = 2) // 限制每分钟只能请求一次
     @Operation(summary = "由玩家上传(分享)一个洞天摹本")
     @PostMapping("/shareCopyInfo")
-    public JsonResult addCopyInfo(@RequestParam("copyId")
-                                  @Parameter(description = "摹本摹数") String copyId,
-                                  @RequestParam("copyName")
-                                  @Parameter(description = "摹本名称") String copyName,
-                                  @RequestParam("typeId")
-                                  @Parameter(description = "洞天类型[id]") Integer typeId,
-                                  @RequestParam("blockId")
-                                  @Parameter(description = "所在区域[id]") Integer blockId,
-                                  @RequestParam("server")
-                                  @Parameter(description = "所在区域[id]") Integer server,
-                                  @RequestParam("author")
-                                  @Parameter(description = "摹本作者") String author,
-                                  @RequestParam(value = "origin", required = false)
-                                  @Parameter(description = "摹本来源") String origin,
-                                  @RequestParam("tagIds")
-                                  @Parameter(description = "标签Id") Integer[] tagIds,
-                                  @RequestParam("imageUrls")
-                                  @Parameter(description = "图片链接") String[] imageUrls,
-                                  @RequestParam("description")
-                                  @Parameter(description = "摹本简介/描述") String description)
-            throws SQLException
+    public JsonResult addCopyInfo(@RequestBody Map<String, Object> params) throws SQLException
     {
+
+
         CopyInfo copyInfo = new CopyInfo();
-        copyInfo.setCopyId(copyId);
-        copyInfo.setCopyName(copyName);
-        copyInfo.setTypeId(typeId);
-        copyInfo.setBlockId(blockId);
-        copyInfo.setAuthor(author);
-        copyInfo.setServer(server);
-        copyInfo.setOrigin(origin);
-        copyInfo.setDescription(description);
-        boolean b = copyInfoService.addCopyInfo(copyInfo, tagIds, imageUrls);
+        copyInfo.setCopyId((String) params.get("copyId"));
+        copyInfo.setUid(0);
+        copyInfo.setCopyName((String) params.get("copyName"));
+        copyInfo.setTypeId((Integer) params.get("typeId"));
+        copyInfo.setUploadType(Integer.parseInt((String) params.get("uploadType")));
+        copyInfo.setBlockId((Integer) params.get("blockId"));
+        copyInfo.setAuthor((String) params.get("author"));
+        copyInfo.setServer(Integer.parseInt((String) params.get("server")));
+        copyInfo.setOrigin((String) params.get("origin"));
+        copyInfo.setDescription((String) params.get("description"));
+
+        List<String> imageUrls = (List<String>) params.get("imageUrls");
+        List<Integer> tagIds = (List<Integer>) params.get("tagIds");
+        boolean b = copyInfoService.addCopyInfo(copyInfo, tagIds.toArray(new Integer[0]), imageUrls.toArray(new String[0]));
         if (!b) return ResultUtil.error("摹本发布失败");
-        return ResultUtil.success("发布成功，请等待审核 [非半夜时段预计两小时]");
+        return ResultUtil.success("发布成功，审核中 [预计两小时]");
     }
 }

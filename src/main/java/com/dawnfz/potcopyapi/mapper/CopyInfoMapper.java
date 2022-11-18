@@ -21,9 +21,14 @@ public interface CopyInfoMapper
 {
     // 添加一条 摹本信息 到数据库
     int addCopyInfo(CopyInfo copyInfo) throws SQLException;
+    int addCopyInfoVerity(CopyInfo copyInfo) throws SQLException;
+
+    int updateCopyInfo(CopyInfo copyInfo) throws SQLException;
 
     // 添加一条 摹本图片信息 到数据库
     int addImageForCopyInfo(@Param("imageUrl") String imageUrl, @Param("copyId") String copyId);
+
+    int delImageForCopyInfo(@Param("copyId") String copyId) throws SQLException;
 
     // 点击量自增
     int incCopyInfoHits(@Param("copyId") String copyId) throws SQLException;
@@ -34,17 +39,19 @@ public interface CopyInfoMapper
 
     // 查询所有的摹本[根据名称模糊]
     List<Object> getCopyInfos(@Param("copyName") String copyName,
-                                   @Param("typeId") Integer typeId,
-                                   @Param("blockId") Integer blockId,
-                                   @Param("server") Integer server,
-                                   @Param("copyIds") String copyIds,
-                                   @Param("status") Integer status) throws SQLException;
+                              @Param("typeId") Integer typeId,
+                              @Param("blockId") Integer blockId,
+                              @Param("server") Integer server,
+                              @Param("copyIds") String copyIds,
+                              @Param("status") Integer status) throws SQLException;
 
     List<Object> getManagerCopyInfos(@Param("copyName") String copyName,
-                                   @Param("typeId") Integer typeId,
-                                   @Param("blockId") Integer blockId,
-                                   @Param("copyIds") String copyIds,
-                                   @Param("status") Integer status) throws SQLException;
+                                     @Param("typeId") Integer typeId,
+                                     @Param("blockId") Integer blockId,
+                                     @Param("copyIds") String copyIds,
+                                     @Param("status") Integer status,
+                                     @Param("uid") Integer uid,
+                                     @Param("roleLevel") Integer roleLevel) throws SQLException;
 
     // 查询所有的摹本[根据标签]
     List<CopyInfo> getCopyInfosByTags(@Param("tags") String[] tags) throws SQLException;

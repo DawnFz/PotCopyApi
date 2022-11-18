@@ -1,7 +1,6 @@
 package com.dawnfz.potcopyapi.service.impl;
 
 import com.dawnfz.potcopyapi.domain.CopyInfo;
-import com.dawnfz.potcopyapi.domain.dto.CopyInfoDto;
 import com.dawnfz.potcopyapi.mapper.CopyInfoMapper;
 import com.dawnfz.potcopyapi.mapper.ParamsMapper;
 import com.dawnfz.potcopyapi.service.abst.CopyInfoService;
@@ -79,8 +78,8 @@ public class CopyInfoServiceImpl implements CopyInfoService
 
     // 查询所有的洞天摹本[分页][模糊查询]
     @Override
-    public PageResult getCopyInfos(PageRequest pageRequest, String copyName, Integer typeId,
-                                   Integer blockId,Integer server, String[] tagNames, Integer status) throws SQLException
+    public PageResult getCopyInfos(PageRequest pageRequest, String copyName, Integer typeId, Integer blockId, Integer server,
+                                   String[] tagNames, Integer status, Integer uid, Integer roleLevel) throws SQLException
     {
         int pageSize = pageRequest.getPageSize();
         int pageNum = pageRequest.getPageNum();
@@ -94,17 +93,11 @@ public class CopyInfoServiceImpl implements CopyInfoService
         Page<Object> page = PageHelper.startPage(pageNum, pageSize);
         // status = 0 代表已过审核的摹本
         List<Object> copyInfos;
-        if (status == 0) copyInfos = copyInfoMapper.getCopyInfos(copyName, typeId, blockId, server,copyIdsStr, status);
-        else copyInfos = copyInfoMapper.getManagerCopyInfos(copyName, typeId, blockId, copyIdsStr, status);
-        long total = page.getTotal();
-        int totalPages = page.getPages();
+        if (status == null || status != 0)
+            copyInfos = copyInfoMapper.getManagerCopyInfos(copyName, typeId, blockId, copyIdsStr, status, uid, roleLevel);
+        else copyInfos = copyInfoMapper.getCopyInfos(copyName, typeId, blockId, server, copyIdsStr, status);
         if (copyInfos.size() == 0) copyInfos = new ArrayList<>();
-        PageResult pageResult = new PageResult(copyInfos);
-        pageResult.setPageNum(pageNum);
-        pageResult.setPageSize(pageSize);
-        pageResult.setTotalSize(total);
-        pageResult.setTotalPages(totalPages);
-        return pageResult;
+        return new PageResult(copyInfos, page);
     }
 
     // 内部生成 Mybatis Mapper 中所需的 ${} 参数

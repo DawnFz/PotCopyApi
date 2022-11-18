@@ -7,6 +7,7 @@
     <!-- CopyInfo 映射结果集 -->
     <resultMap id="copyInfo" type="com.dawnfz.potcopyapi.domain.CopyInfo">
         <id column="id" property="id"/>
+        <result column="uid" property="uid"/>
         <result column="copyId" property="copyId"/>
         <result column="copyName" property="copyName"/>
         <result column="potType" property="potType"/>
@@ -16,6 +17,7 @@
         <result column="server" property="server"/>
         <result column="description" property="description"/>
         <result column="status" property="status"/>
+        <result column="uploadType" property="uploadType"/>
         <!-- 类型字段子查询 -->
         <collection property="potType" column="{typeId=typeId}"
                     select="getTypeForCopyInfo"
@@ -28,6 +30,10 @@
         <collection property="tags" column="{copyId=copyId}"
                     select="getTagsForCopyInfo"
                     ofType="string" javaType="List"/>
+        <!-- 集合字段子查询[标签Id] -->
+        <collection property="tagIds" column="{copyId=copyId}"
+                    select="getTagIdsForCopyInfo"
+                    ofType="integer" javaType="List"/>
         <!-- 集合字段子查询[图片] -->
         <collection property="images" column="{copyId=copyId}"
                     select="getImagesForCopyInfo"
@@ -87,7 +93,7 @@
     <select id="getManagerCopyInfos" resultMap="copyInfo">
         select *
         from t_info
-        where status = #{status}
+        where true
         <if test="copyName!=null">
             and copyName like CONCAT('%', #{copyName},'%')
         </if>
@@ -96,6 +102,12 @@
         </if>
         <if test="blockId!=null">
             and blockId = #{blockId}
+        </if>
+        <if test="roleLevel!=0">
+            and uid = ${uid}
+        </if>
+        <if test="roleLevel==0">
+            and status = #{status}
         </if>
         <if test="copyIds!=null">
             and copyId in (${copyIds})
@@ -114,6 +126,14 @@
     <!-- 标签子查询 -->
     <select id="getTagsForCopyInfo" resultType="string">
         select tt.tagName
+        from t_tag tt
+                 left join t_tag_info ti on tt.id = ti.tagId
+        where ti.copyId = #{copyId}
+    </select>
+
+    <!-- 标签Id子查询 -->
+    <select id="getTagIdsForCopyInfo" resultType="integer">
+        select tt.id
         from t_tag tt
                  left join t_tag_info ti on tt.id = ti.tagId
         where ti.copyId = #{copyId}
@@ -143,10 +163,19 @@
     <!-- 添加一条摹本数据 -->
     <insert id="addCopyInfo">
         insert into t_info(id, copyId, copyName, typeId, blockId, uploadTime,
-                           author, hits, origin, description, status, server)
+                           author, hits, origin, description, status, server, uploadType)
         values (null, #{copyId}, #{copyName}, #{typeId}, #{blockId},
-                now(), #{author}, 0, #{origin}, #{description}, 1, #{server})
+                now(), #{author}, 0, #{origin}, #{description}, 1, #{server}, #{uploadType})
     </insert>
+
+    <!-- 添加一条摹本数据[带认证] -->
+    <insert id="addCopyInfoVerity">
+        insert into t_info(id, copyId, uid, copyName, typeId, blockId, uploadTime,
+                           author, hits, origin, description, status, server, uploadType)
+        values (null, #{copyId}, #{uid}, #{copyName}, #{typeId}, #{blockId},
+                now(), #{author}, 0, #{origin}, #{description}, 0, #{server}, #{uploadType})
+    </insert>
+
 
     <!-- 添加一条图片关联摹本记录 -->
     <insert id="addImageForCopyInfo">
@@ -160,4 +189,27 @@
         set hits =hits + 1
         where copyId = #{copyId}
     </update>
+
+    <!-- 更新摹本内容 -->
+    <update id="updateCopyInfo">
+        update t_info
+        set
+        <if test="copyName!=null">copyName=#{copyName},</if>
+        <if test="typeId!=null">typeId=#{typeId},</if>
+        <if test="blockId!=null">blockId=#{blockId},</if>
+        <if test="author!=null">author=#{author},</if>
+        <if test="server!=null">server=#{server},</if>
+        <if test="origin!=null">origin=#{origin},</if>
+        <if test="description!=null">description=#{description},</if>
+        copyId = #{copyId}
+        where copyId = #{copyId}
+    </update>
+
+    <!-- 删除图片关联记录 -->
+    <delete id="delImageForCopyInfo">
+        delete
+        from t_img
+        where copyId = #{copyId}
+    </delete>
+
 </mapper>

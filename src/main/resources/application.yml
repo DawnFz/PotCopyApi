@@ -52,11 +52,14 @@ config:
     scheme: Bearer
     secret: Private Key
     expire: 43200
-  auth:
-    sourceKey: Test Key
+    role-map:
+      0: Manager
+      1: Author
+
   url:
     # 不需要访问权限的接口
     paths:
+      - /swagger-ui/**
+      - /v3/**
       - /api/Info/**
       - /api/Params/**
-      - /api/Auth/**
