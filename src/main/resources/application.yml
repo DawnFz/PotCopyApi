@@ -1,6 +1,10 @@
 # server port
 server:
-  port: 8085
+  port: 443
+  ssl:
+    key-store: 与本文件同级下的证书文件.pfx
+    key-store-password: 这里是证书的密码
+    key-store-type: pkcs12
   error:
     include-message: always
   servlet:
@@ -50,16 +54,8 @@ config:
   jwt:
     header: Authorization
     scheme: Bearer
-    secret: Private Key
+    secret: DawnFz-Love-MiaoPu-这是一个彩蛋加密密钥
     expire: 43200
     role-map:
       0: Manager
       1: Author
-
-  url:
-    # 不需要访问权限的接口
-    paths:
-      - /swagger-ui/**
-      - /v3/**
-      - /api/Info/**
-      - /api/Params/**

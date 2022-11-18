@@ -1,5 +1,6 @@
 package com.dawnfz.potcopyapi.controller.api;
 
+import com.dawnfz.potcopyapi.annotation.Authorize;
 import com.dawnfz.potcopyapi.annotation.InfoIncrement;
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
 import com.dawnfz.potcopyapi.domain.CopyInfo;
@@ -25,6 +26,7 @@ import java.util.*;
  *  Version: 1.0
  *  Describe: [ManagerController类]
  */
+@Authorize
 @RestController
 @RequestMapping("/api/Manager")
 @Tag(name = "Manager", description = "后台管理接口")

@@ -10,13 +10,12 @@
     </parent>
     <groupId>com.dawnfz</groupId>
     <artifactId>PotCopyApi</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.8</version>
     <name>PotCopyApi</name>
     <description>PotCopyApi</description>
     <!-- 使用外置 Tomcat 容器[war] -->
     <packaging>war</packaging>
-    <!-- 使用自带 Tomcat 容器[jar] -->
-    <!--<packaging>jar</packaging>-->
+<!--    <packaging>jar</packaging>-->
     <properties>
         <java.version>11</java.version>
     </properties>

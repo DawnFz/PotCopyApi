@@ -1,5 +1,6 @@
 package com.dawnfz.potcopyapi.controller.api;
 
+import com.dawnfz.potcopyapi.annotation.Authorize;
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
 import com.dawnfz.potcopyapi.config.prop.TokenProperties;
 import com.dawnfz.potcopyapi.domain.Author;
@@ -31,6 +32,7 @@ import java.util.Map;
  *  Version: 1.0
  *  Describe: [AuthorizedController类]
  */
+@Authorize
 @RestController
 @RequestMapping("/api/Author")
 @Tag(name = "Author", description = "创作者接口")
