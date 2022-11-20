@@ -40,7 +40,6 @@ public class AuthorController
 {
     private final AuthorService authorService;
     private final TokenProperties tokenProperties;
-
     private final CopyInfoService copyInfoService;
 
     public AuthorController(AuthorService authorService, TokenProperties tokenProperties,
@@ -119,8 +118,12 @@ public class AuthorController
         copyInfo.setCopyName((String) params.get("copyName"));
         copyInfo.setTypeId((Integer) params.get("typeId"));
         copyInfo.setBlockId((Integer) params.get("blockId"));
-        String nickName = (String) claims.get("nickName");
-        copyInfo.setAuthor(nickName);
+        Integer roleLevel = (Integer) claims.get("roleLevel");
+        if (roleLevel != 0)
+        {
+            String nickName = (String) claims.get("nickName");
+            copyInfo.setAuthor(nickName);
+        }
         copyInfo.setServer((Integer) params.get("server"));
         copyInfo.setOrigin((String) params.get("origin"));
         copyInfo.setDescription((String) params.get("description"));
@@ -128,6 +131,17 @@ public class AuthorController
         List<Integer> tagIds = (List<Integer>) params.get("tagIds");
         authorService.updateCopyInfo(copyInfo, tagIds.toArray(new Integer[0]), images.toArray(new String[0]));
         return ResultUtil.success("修改成功，内容需要等待CDN刷新后才显示");
+    }
+
+    @DeleteMapping("/delCopyInfo")
+    @Operation(summary = "删除我发布的一条摹本信息")
+    public JsonResult delCopyInfo(@RequestParam("copyId") @Parameter(description = "摹本摹数") String copyId,
+                                  HttpServletRequest request) throws SQLException
+    {
+        Claims claims = (Claims) request.getAttribute("identityId");
+        Integer uid = (Integer) claims.get("uid");
+        boolean b = copyInfoService.delCopyInfo(copyId, uid);
+        return b ? ResultUtil.success("摹本删除成功") : ResultUtil.error("摹本删除失败");
     }
 
 }

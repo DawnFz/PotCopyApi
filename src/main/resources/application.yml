@@ -2,8 +2,9 @@
 server:
   port: 443
   ssl:
-    key-store: 与本文件同级下的证书文件.pfx
-    key-store-password: 这里是证书的密码
+    key-store: classpath:www.dawnfz.com.pfx
+    # 本地测试证书的密码 - 无实际作用
+    key-store-password: VFd9Jj9J
     key-store-type: pkcs12
   error:
     include-message: always
@@ -54,7 +55,7 @@ config:
   jwt:
     header: Authorization
     scheme: Bearer
-    secret: DawnFz-Love-MiaoPu-这是一个彩蛋加密密钥
+    secret: DawnFz-Love-MiaoPu
     expire: 43200
     role-map:
       0: Manager

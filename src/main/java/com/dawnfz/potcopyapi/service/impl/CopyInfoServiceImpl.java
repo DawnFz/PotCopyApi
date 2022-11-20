@@ -1,8 +1,11 @@
 package com.dawnfz.potcopyapi.service.impl;
 
 import com.dawnfz.potcopyapi.domain.CopyInfo;
+import com.dawnfz.potcopyapi.domain.Report;
 import com.dawnfz.potcopyapi.mapper.CopyInfoMapper;
+import com.dawnfz.potcopyapi.mapper.ManagerMapper;
 import com.dawnfz.potcopyapi.mapper.ParamsMapper;
+import com.dawnfz.potcopyapi.mapper.ReportMapper;
 import com.dawnfz.potcopyapi.service.abst.CopyInfoService;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
@@ -30,11 +33,16 @@ public class CopyInfoServiceImpl implements CopyInfoService
 {
     private final CopyInfoMapper copyInfoMapper;
     private final ParamsMapper paramsMapper;
+    private final ManagerMapper managerMapper;
+    private final ReportMapper reportMapper;
 
-    public CopyInfoServiceImpl(CopyInfoMapper copyInfoMapper, ParamsMapper paramsMapper)
+    public CopyInfoServiceImpl(CopyInfoMapper copyInfoMapper, ParamsMapper paramsMapper,
+                               ManagerMapper managerMapper, ReportMapper reportMapper)
     {
         this.copyInfoMapper = copyInfoMapper;
         this.paramsMapper = paramsMapper;
+        this.managerMapper = managerMapper;
+        this.reportMapper = reportMapper;
     }
 
     // 添加(分享)一个摹本
@@ -63,9 +71,43 @@ public class CopyInfoServiceImpl implements CopyInfoService
     }
 
     @Override
+    public boolean delCopyInfo(String copyId, Integer uid) throws SQLException
+    {
+        int info = copyInfoMapper.delCopyInfo(copyId, uid);
+        int tags = managerMapper.delTagForInfo(copyId);
+        int imgs = managerMapper.delImageForInfo(copyId);
+        return info > 0 && tags > 0 && imgs > 0;
+    }
+
+    @Override
     public boolean incCopyInfoHits(String copyId) throws SQLException
     {
         return copyInfoMapper.incCopyInfoHits(copyId) > 0;
+    }
+
+    @Override
+    public boolean createCopyReport(Report report) throws SQLException
+    {
+        Report sourceReport = reportMapper.selectReport(report.getCopyId());
+        if (sourceReport != null) return reportMapper.updateReport(report) > 0;
+        return reportMapper.createReport(report) > 0;
+    }
+
+    @Override
+    public boolean delReport(String copyId) throws SQLException
+    {
+        return false;
+    }
+
+    @Override
+    public PageResult getAllReports(PageRequest pageRequest) throws SQLException
+    {
+        int pageSize = pageRequest.getPageSize();
+        int pageNum = pageRequest.getPageNum();
+        Page<Object> page = PageHelper.startPage(pageNum, pageSize);
+        List<Report> reports = reportMapper.getAllReport();
+        if (reports == null) reports = new ArrayList<>();
+        return new PageResult(reports, page);
     }
 
     // 根据 洞天摹本的编号 获得摹本信息
@@ -96,7 +138,7 @@ public class CopyInfoServiceImpl implements CopyInfoService
         if (status == null || status != 0)
             copyInfos = copyInfoMapper.getManagerCopyInfos(copyName, typeId, blockId, copyIdsStr, status, uid, roleLevel);
         else copyInfos = copyInfoMapper.getCopyInfos(copyName, typeId, blockId, server, copyIdsStr, status);
-        if (copyInfos.size() == 0) copyInfos = new ArrayList<>();
+        if (copyInfos == null) copyInfos = new ArrayList<>();
         return new PageResult(copyInfos, page);
     }
 

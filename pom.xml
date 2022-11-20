@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.dawnfz</groupId>
     <artifactId>PotCopyApi</artifactId>
-    <version>0.3.8</version>
+    <version>0.4.1</version>
     <name>PotCopyApi</name>
     <description>PotCopyApi</description>
     <!-- 使用外置 Tomcat 容器[war] -->
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.2.14</version>
+            <version>1.2.15</version>
         </dependency>
 
         <!-- swagger api -->
@@ -101,12 +101,6 @@
         </dependency>
 
         <!-- jwt -->
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>4.2.1</version>
-        </dependency>
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
@@ -123,7 +117,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>2.0.17</version>
+            <version>2.0.19</version>
         </dependency>
 
         <!-- xml patch -->

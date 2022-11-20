@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/share.snapgenshin.com.pfx
+/src/main/resources/www.dawnfz.com.pfx

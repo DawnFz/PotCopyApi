@@ -22,6 +22,7 @@ public interface ManagerService
     boolean addTypeBlock(Integer typeId, Integer[] blockIds) throws SQLException;
 
     boolean delCopyInfo(String copyId) throws SQLException;
+    boolean delReport(String copyId) throws SQLException;
 
     boolean updateCopyInfo(String copyId, Integer status) throws SQLException;
 }

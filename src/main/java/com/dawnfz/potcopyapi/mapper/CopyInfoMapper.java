@@ -21,9 +21,12 @@ public interface CopyInfoMapper
 {
     // 添加一条 摹本信息 到数据库
     int addCopyInfo(CopyInfo copyInfo) throws SQLException;
+
     int addCopyInfoVerity(CopyInfo copyInfo) throws SQLException;
 
     int updateCopyInfo(CopyInfo copyInfo) throws SQLException;
+
+    int delCopyInfo(@Param("copyId") String copyId, @Param("uid") Integer uid) throws SQLException;
 
     // 添加一条 摹本图片信息 到数据库
     int addImageForCopyInfo(@Param("imageUrl") String imageUrl, @Param("copyId") String copyId);

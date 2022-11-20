@@ -101,6 +101,33 @@ public class ManagerController
         return ResultUtil.success(copyInfos);
     }
 
+    @Operation(summary = "分页查询摹本信息[所有]")
+    @GetMapping("/allCopyInfos")
+    public JsonResult allCopyInfos(@RequestParam("pageNum")
+                                   @Parameter(description = "当前页数") Integer pageNum,
+                                   @RequestParam("pageSize")
+                                   @Parameter(description = "页内大小(数量)") Integer pageSize)
+            throws SQLException
+    {
+        PageRequest pageRequest = new PageRequest(pageNum, pageSize);
+        PageResult copyInfos = copyInfoService.getCopyInfos(pageRequest, null,
+                null, null, null, null, null, null, null);
+        return ResultUtil.success(copyInfos);
+    }
+
+    @Operation(summary = "分页查询举报信息[所有]")
+    @GetMapping("/getAllReports")
+    public JsonResult getAllReports(@RequestParam("pageNum")
+                                    @Parameter(description = "当前页数") Integer pageNum,
+                                    @RequestParam("pageSize")
+                                    @Parameter(description = "页内大小(数量)") Integer pageSize)
+            throws SQLException
+    {
+        PageRequest pageRequest = new PageRequest(pageNum, pageSize);
+        PageResult reports = copyInfoService.getAllReports(pageRequest);
+        return ResultUtil.success(reports);
+    }
+
     @RequestLimit(count = 20)
     @Operation(summary = "根据摹本摹数删除一条摹本记录")
     @DeleteMapping("/delCopyInfo")
@@ -121,8 +148,21 @@ public class ManagerController
                                      @RequestParam("control")
                                      @Parameter(description = "审核状态") Boolean control) throws SQLException
     {
-        String statusTips = control ? "已通过该摹本放公开状态" : "已拒绝该摹本开放申请";
+        String statusTips = control ? "已通过该摹本放公开状态" : "已取消该摹本公开状态";
         return managerService.updateCopyInfo(copyId, control ? 0 : 2) ?
                 ResultUtil.success(statusTips) : ResultUtil.error("修改失败");
     }
+
+
+    @RequestLimit(count = 20)
+    @Operation(summary = "删除一条举报的记录")
+    @DeleteMapping("/delReport")
+    public JsonResult delReport(@RequestParam("copyId")
+                                @Parameter(description = "摹本摹数")
+                                String copyId) throws SQLException
+    {
+        return managerService.delReport(copyId) ?
+                ResultUtil.success("删除该举报成功") : ResultUtil.error("删除失败");
+    }
+
 }

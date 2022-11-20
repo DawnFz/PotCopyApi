@@ -15,7 +15,10 @@ import lombok.Data;
 public class Report
 {
     private Integer id;
-    private Integer reporter;
+    private String author;
     private String copyId;
+    private String origin;
     private String note;
+    private Integer count;
+    private String time;
 }

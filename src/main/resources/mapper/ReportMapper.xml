@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawnfz.potcopyapi.mapper.ReportMapper">
+
+    <!-- select report -->
+    <select id="selectReport" resultType="com.dawnfz.potcopyapi.domain.Report">
+        select *
+        from t_report
+        where copyId = #{copyId}
+    </select>
+
+    <select id="getAllReport" resultType="com.dawnfz.potcopyapi.domain.Report">
+        select *
+        from t_report
+    </select>
+
+    <!-- create report -->
+    <insert id="createReport">
+        insert into t_report(id, author, copyId, origin, note, time)
+        values (null, #{author}, #{copyId}, #{origin}, #{note}, now())
+    </insert>
+
+    <!-- update report -->
+    <update id="updateReport">
+        update t_report
+        set count=count + 1,
+            time=now()
+        where copyId = #{copyId}
+    </update>
+
+    <!-- delete report -->
+    <delete id="deleteReport">
+        delete
+        from t_report
+        where copyId = #{copyId}
+    </delete>
+
+</mapper>

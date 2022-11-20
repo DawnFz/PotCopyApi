@@ -1,6 +1,7 @@
 package com.dawnfz.potcopyapi.service.impl;
 
 import com.dawnfz.potcopyapi.mapper.ManagerMapper;
+import com.dawnfz.potcopyapi.mapper.ReportMapper;
 import com.dawnfz.potcopyapi.service.abst.ManagerService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,12 @@ public class ManagerServiceImpl implements ManagerService
 {
 
     private final ManagerMapper managerMapper;
+    private final ReportMapper reportMapper;
 
-    public ManagerServiceImpl(ManagerMapper managerMapper)
+    public ManagerServiceImpl(ManagerMapper managerMapper, ReportMapper reportMapper)
     {
         this.managerMapper = managerMapper;
+        this.reportMapper = reportMapper;
     }
 
     @Override
@@ -91,6 +94,12 @@ public class ManagerServiceImpl implements ManagerService
         int tags = managerMapper.delTagForInfo(copyId);
         int imgs = managerMapper.delImageForInfo(copyId);
         return info > 0 && tags > 0 && imgs > 0;
+    }
+
+    @Override
+    public boolean delReport(String copyId) throws SQLException
+    {
+        return reportMapper.deleteReport(copyId) > 0;
     }
 
     @Override

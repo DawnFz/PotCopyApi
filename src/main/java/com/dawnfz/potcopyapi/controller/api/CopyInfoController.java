@@ -3,12 +3,12 @@ package com.dawnfz.potcopyapi.controller.api;
 import com.dawnfz.potcopyapi.annotation.InfoIncrement;
 import com.dawnfz.potcopyapi.annotation.RequestLimit;
 import com.dawnfz.potcopyapi.domain.CopyInfo;
+import com.dawnfz.potcopyapi.domain.Report;
 import com.dawnfz.potcopyapi.service.abst.CopyInfoService;
 import com.dawnfz.potcopyapi.wrapper.page.PageRequest;
 import com.dawnfz.potcopyapi.wrapper.page.PageResult;
 import com.dawnfz.potcopyapi.wrapper.result.JsonResult;
 import com.dawnfz.potcopyapi.wrapper.result.ResultUtil;
-import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -100,5 +100,19 @@ public class CopyInfoController
         boolean b = copyInfoService.addCopyInfo(copyInfo, tagIds.toArray(new Integer[0]), imageUrls.toArray(new String[0]));
         if (!b) return ResultUtil.error("摹本发布失败");
         return ResultUtil.success("发布成功，审核中 [预计两小时]");
+    }
+
+    @PostMapping("/reportCopy")
+    @Operation(summary = "举报一个摹本")
+    @RequestLimit(count = 2)
+    public JsonResult reportCopy(@RequestBody Map<String, Object> params) throws SQLException
+    {
+        Report report = new Report();
+        report.setCopyId((String) params.get("copyId"));
+        report.setAuthor((String) params.get("author"));
+        report.setOrigin((String) params.get("origin"));
+        report.setNote((String) params.get("note"));
+        boolean b = copyInfoService.createCopyReport(report);
+        return b ? ResultUtil.success("举报成功，等待管理员处理") : ResultUtil.error("举报失败");
     }
 }

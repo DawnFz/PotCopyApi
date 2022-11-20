@@ -103,7 +103,7 @@
         <if test="blockId!=null">
             and blockId = #{blockId}
         </if>
-        <if test="roleLevel!=0">
+        <if test="roleLevel!=null and roleLevel!=0">
             and uid = ${uid}
         </if>
         <if test="roleLevel==0">
@@ -210,6 +210,14 @@
         delete
         from t_img
         where copyId = #{copyId}
+    </delete>
+
+    <!-- delete copyInfo -->
+    <delete id="delCopyInfo">
+        delete
+        from t_info
+        where copyId = #{copyId}
+          and uid = #{uid}
     </delete>
 
 </mapper>
